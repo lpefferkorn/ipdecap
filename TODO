@@ -1,0 +1,16 @@
+GENERAL
+-------
+-support IPv6
+-stats on processed packets: total, processed, errors, ...
+-openvpn protocol
+-tinc protocol
+-add more encrytion algorithms
+-clean and commit unit test scripts
+
+ESP
+---
+-handle transport mode
+
+GRE
+---
+-notes on ttl (rfc 2784)

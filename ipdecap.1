@@ -1,0 +1,108 @@
+.\"     Copyright (C) 2012-2013 Loic Pefferkorn <loic-ipdecap@loicp.eu>
+.\"
+.\"     This program is free software; you can redistribute it and/or modify
+.\"     it under the terms of the GNU General Public License as published by
+.\"     the Free Software Foundation; either version 2 of the License, or
+.\"     (at your option) any later version.
+.\"
+.\"     This program is distributed in the hope that it will be useful,
+.\"     but WITHOUT ANY WARRANTY; without even the implied warranty of
+.\"     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+.\"     GNU General Public License for more details.
+.\"
+.\"     You should have received a copy of the GNU General Public License
+.\"     along with this program; if not, write to the Free Software
+.\"     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+.\"
+
+.TH "ipdecap" 1
+.SH NAME
+ipdecap \- Decapsulate ESP, GRE, IPIP packets
+.SH SYNOPSIS
+.B ipdecap
+[-v] [-l] [-V] -i input.cap -o output.cap [-c esp.conf] [-f <bpf filter>]
+.SH DESCRIPTION
+Ipdecap can decapsulate traffic encapsulated within ESP, GRE and ESP (ipsec) protocols.
+.P
+It read packets from an pcap file, remove encapsulation protocol, and write them in another pcap file.
+.br
+For encrypted protocols (like ESP), a configuration (--conf) with algorithms, hosts, spi and key is mandatory.
+.P
+Integrity Check Value from AH header is not yet checked.
+.P
+A bpf filter (-f <filter>) can be applied to limit the packets processed from the input file:
+.P
+.RS
+ ipdecap -i esp.cap -o out.cap -f "src 192.0.2.1 and dst 192.0.2.2"
+.br
+.RE
+.P
+At the moment, the following encapsulation protocols are supported:
+.P
+.B IPIP, GRE (IPv4)
+.P
+.B ESP (ipsec) (IPv4)
+.RS
+Encryption algorithms: des-cbc 3des-cbc aes128-cbc aes128-ctr null_enc
+.P
+Authentification algorithms: hmac_sha1-96 hmac_md5-96 aes_xcbc_mac-96 null_auth any96 any128 any160 any192 any256 any384 any512
+.P
+.RE
+.SH OPTIONS
+.TP
+.B \-i, --input input file
+The pcap file to read packets from.
+.TP
+.B \-o, --output output file
+The pcap file to write decapsulated packets to.
+.TP
+.B \-c, --conf esp configuration file
+.RS
+A file with security associations parameters used to decrypt ESP packets, one line per flow. The line's format is:
+.P
+<host A IP address> <host B IP address> <encryption algorithm> <authentification algorithm> <key (hex)> <SPI (hex)>
+.P
+For example, to decrypt both flows from A to B and B to A you will need two lines:
+.P
+.RS
+192.168.2.100 192.168.2.101 3des-cbc hmac_sha1-96 0x785778a2d4b0f36bf17a8c55d9b6cea7abcdef43f9d0d8b0 0x04022464
+.br
+192.168.2.101 192.168.2.100 3des-cbc hmac_sha1-96 0xdeadbeeffff23a964457224d4a05121247bdbc8f0dda23fc 0x02250089
+.RE
+.P
+Separator is space or tabulation, if key is useless (null_enc), just put "0". Both spi and key must be in hexadecimal format.
+.br At the moment, the authentification part of ESP is not used.
+The configuration file can be generated from setkey -Da output thanks to the provided sadb2conf.awk script.
+.RE
+.TP
+.B -v, --verbose
+Print more details for each packet processed (encapsulation protocol, sucessfully decryption if IPsec, ...)
+.TP
+.B \-V, --version
+print version
+.TP
+.B \-l, --list
+List supported ESP encryption and authentication algorithms
+.TP
+
+.SH BUGS
+.P
+-IPV6 not supported
+.br
+-ESP transport mode not supported
+.br
+.SH NO WARRANTIES
+Ipdecap is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+.SH LICENSE
+Copyright 2012-2013 Loic Pefferkorn
+.PP
+This program is distributed under the terms of the GNU General Public License V3 as published by the Free Software Foundation.
+.SH AUTHOR
+.PP
+Loic Pefferkorn.  Use <loic-ipdecap@loicp.eu> to contact the developer.
+.PP
+Ipdecap homepage: http://www.loicp.eu/ipdecap
+
