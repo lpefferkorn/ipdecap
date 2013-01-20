@@ -95,7 +95,9 @@ auth_method_t *auth_method_list = &null_auth;
 /* Encryption algorithms */
 
 crypt_method_t null_enc       = { .name = "null_enc",   .openssl_cipher = NULL,           .next = NULL};
-crypt_method_t aes_128_cbc    = { .name = "aes128-cbc", .openssl_cipher = "aes-128-cbc",  .next = &null_enc};
+crypt_method_t aes_256_cbc    = { .name = "aes256-cbc", .openssl_cipher = "aes-256-cbc",  .next = &null_enc};
+crypt_method_t aes_192_cbc    = { .name = "aes192-cbc", .openssl_cipher = "aes-192-cbc",  .next = &aes_256_cbc};
+crypt_method_t aes_128_cbc    = { .name = "aes128-cbc", .openssl_cipher = "aes-128-cbc",  .next = &aes_192_cbc};
 crypt_method_t aes_128_ctr    = { .name = "aes128-ctr", .openssl_cipher = "aes-128-ctr",  .next = &aes_128_cbc};
 crypt_method_t tripledes_cbc  = { .name = "3des-cbc",   .openssl_cipher = "des-ede3-cbc", .next = &aes_128_ctr};
 crypt_method_t des_cbc        = { .name = "des-cbc",    .openssl_cipher = "des-cbc",      .next = &tripledes_cbc};
