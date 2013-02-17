@@ -838,56 +838,55 @@ void process_esp_packet(u_char const *payload, const int payload_len, pcap_hdr *
  * For each packet, identify its encapsulation protocol and give it to the corresponding process_xx_packet function
  *
  */
-void handle_packets(u_char *bpf_filter, const struct pcap_pkthdr *in_pkthdr, const u_char *bytes) {
+void handle_packets(u_char *bpf_filter, const struct pcap_pkthdr *pkthdr, const u_char *bytes) {
 
   static int packet_num = 0;
   const struct ether_header *eth_hdr = NULL;
   const struct iphdr *ip_hdr = NULL;
-  const u_char *payload_ptr = NULL;   // source packet
   struct bpf_program *bpf = NULL;
-  struct pcap_pkthdr *new_packet_hdr;
-  u_char * new_packet_payload;
+  struct pcap_pkthdr *in_pkthdr, *out_pkthdr = NULL; 
+  u_char *in_payload, *out_payload = NULL;
 
   verbose("Processing packet %i\n", packet_num);
 
   // Check if packet match bpf filter, if given
   if (bpf_filter != NULL) {
     bpf = (struct bpf_program *) bpf_filter;
-    if (pcap_offline_filter(bpf, in_pkthdr, bytes)  == 0) {
+    if (pcap_offline_filter(bpf, pkthdr, bytes)  == 0) {
       verbose("Packet %i does not match bpf filter\n", packet_num);
       goto exit;
     }
   }
 
-  // Extracted packet from encapsulation payload
-  MALLOC(new_packet_hdr, 1, struct pcap_pkthdr);
-  MALLOC(new_packet_payload, 65535, u_char);
-  memset(new_packet_hdr, 0, sizeof(struct pcap_pkthdr));
-  memset(new_packet_payload, 0, 65535);
+  MALLOC(out_pkthdr, 1, struct pcap_pkthdr);
+  MALLOC(out_payload, 65535, u_char);
+  memset(out_pkthdr, 0, sizeof(struct pcap_pkthdr));
+  memset(out_payload, 0, 65535);
 
-  new_packet_hdr->ts.tv_sec = in_pkthdr->ts.tv_sec;
-  new_packet_hdr->ts.tv_usec = in_pkthdr->ts.tv_usec;
-  new_packet_hdr->caplen = in_pkthdr->caplen;
+  // Get non-const pointers and meaningful names (usefull for ETHERTYPE_VLAN pkthdr changes)
+  in_pkthdr = pkthdr;
+  in_payload = bytes;
 
-  // Set pointer to original packet payload
-  payload_ptr = bytes;
+  // Copy source pcap metadata
+  out_pkthdr->ts.tv_sec = in_pkthdr->ts.tv_sec;
+  out_pkthdr->ts.tv_usec = in_pkthdr->ts.tv_usec;
+  out_pkthdr->caplen = in_pkthdr->caplen;
 
-  eth_hdr = (const struct ether_header *) bytes;
+
+  eth_hdr = (const struct ether_header *) in_payload;
 
   // ethertype = *(pkt_in_ptr + 12) << 8 | *(pkt_in_ptr+13);
 
   if (ntohs(eth_hdr->ether_type) != ETHERTYPE_IP) {
 
     // Non IP packet ? Just copy
-    process_nonip_packet(payload_ptr, in_pkthdr->caplen, new_packet_hdr, new_packet_payload);
-
-    pcap_dump((u_char *)pcap_dumper, new_packet_hdr, new_packet_payload);
-
+    process_nonip_packet(in_payload, in_pkthdr->caplen, out_pkthdr, out_payload);
+    pcap_dump((u_char *)pcap_dumper, out_pkthdr, out_payload);
 
   } else {
 
     // Find encapsulation type
-    ip_hdr = (const struct iphdr *) (bytes + sizeof(struct ether_header));
+    ip_hdr = (const struct iphdr *) (in_payload + sizeof(struct ether_header));
 
     //debug_print("\tIP hlen:%i iplen:%02x protocol:%02x payload_len:%i\n",
       //(ip_hdr->ihl *4), ntohs(ip_hdr->tot_len), ip_hdr->protocol, payload_len);
@@ -896,15 +895,15 @@ void handle_packets(u_char *bpf_filter, const struct pcap_pkthdr *in_pkthdr, con
 
       case IPPROTO_IPIP:
         debug_print("%s\n", "\tIPPROTO_IPIP");
-        process_ipip_packet(payload_ptr, in_pkthdr->caplen, new_packet_hdr, new_packet_payload);
-        pcap_dump((u_char *)pcap_dumper, new_packet_hdr, new_packet_payload);
+        process_ipip_packet(in_payload, in_pkthdr->caplen, out_pkthdr, out_payload);
+        pcap_dump((u_char *)pcap_dumper, out_pkthdr, out_payload);
 
         break;
 
       case IPPROTO_GRE:
         debug_print("%s\n", "\tIPPROTO_GRE\n");
-        process_gre_packet(payload_ptr, in_pkthdr->caplen, new_packet_hdr, new_packet_payload);
-        pcap_dump((u_char *)pcap_dumper, new_packet_hdr, new_packet_payload);
+        process_gre_packet(in_payload, in_pkthdr->caplen, out_pkthdr, out_payload);
+        pcap_dump((u_char *)pcap_dumper, out_pkthdr, out_payload);
         break;
 
       case IPPROTO_ESP:
@@ -912,26 +911,26 @@ void handle_packets(u_char *bpf_filter, const struct pcap_pkthdr *in_pkthdr, con
 
         if (ignore_esp == 1) {
           verbose("Ignoring ESP packet %i\n", packet_num);
-          free(new_packet_hdr);
-          free(new_packet_payload);
+          free(out_pkthdr);
+          free(out_payload);
           return;
         }
 
-        process_esp_packet(payload_ptr, in_pkthdr->caplen, new_packet_hdr, new_packet_payload);
-        pcap_dump((u_char *)pcap_dumper, new_packet_hdr, new_packet_payload);
+        process_esp_packet(in_payload, in_pkthdr->caplen, out_pkthdr, out_payload);
+        pcap_dump((u_char *)pcap_dumper, out_pkthdr, out_payload);
         break;
 
       default:
         // Copy not encapsulated/unknown encpsulation protocol packets, like non_ip packets
-        process_nonip_packet(payload_ptr, in_pkthdr->caplen, new_packet_hdr, new_packet_payload);
-        pcap_dump((u_char *)pcap_dumper, new_packet_hdr, new_packet_payload);
+        process_nonip_packet(in_payload, in_pkthdr->caplen, out_pkthdr, out_payload);
+        pcap_dump((u_char *)pcap_dumper, out_pkthdr, out_payload);
         verbose("Copying packet %i: not encapsulated/unknown encapsulation protocol\n", packet_num);
 
     }
   } // if (ntohs(eth_hdr->ether_type) != ETHERTYPE_IP)
 
-  free(new_packet_hdr);
-  free(new_packet_payload);
+  free(out_pkthdr);
+  free(out_payload);
 
   exit: // Avoid several 'return' in middle of code
     packet_num++;
