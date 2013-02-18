@@ -27,6 +27,7 @@ along with ipdecap.  If not, see <http://www.gnu.org/licenses/>.
 #include <string.h>
 #include <string.h>
 #include <pcap/pcap.h>
+#include <pcap/vlan.h>
 #include <arpa/inet.h>
 #include <sys/types.h>
 #include <sys/socket.h>
@@ -570,6 +571,33 @@ void dump_flows() {
 }
 
 /*
+ * Remove IEEE 802.1Q header (virtual lan)
+ *
+ */
+void remove_ieee8021q_header(const u_char *in_payload, const int in_payload_len, pcap_hdr *out_pkthdr, u_char *out_payload) {
+  
+  u_char *payload_dst, *payload_src = NULL;
+
+  payload_src = in_payload;
+  payload_dst = out_payload;
+
+  // Copy ethernet src and dst
+  memcpy(payload_dst, payload_src, 2*sizeof(struct ether_addr));
+  payload_src += 2*sizeof(struct ether_addr);
+  payload_dst += 2*sizeof(struct ether_addr);
+
+  // Skip ieee 802.1q bytes
+  payload_src += VLAN_TAG_LEN;
+  memcpy(payload_dst, payload_src, in_payload_len
+                                  - 2*sizeof(struct ether_addr)
+                                  - VLAN_TAG_LEN); 
+  
+  // Should I check for minimum frame size, even if most drivers don't supply FCS (4 bytes) ?
+  out_pkthdr->len = in_payload_len - VLAN_TAG_LEN;
+  out_pkthdr->caplen = in_payload_len - VLAN_TAG_LEN;
+}
+
+/*
  * Simply copy non-IP packet
  *
  */
@@ -863,7 +891,7 @@ void handle_packets(u_char *bpf_filter, const struct pcap_pkthdr *pkthdr, const 
   memset(out_pkthdr, 0, sizeof(struct pcap_pkthdr));
   memset(out_payload, 0, 65535);
 
-  // Get non-const pointers and meaningful names (usefull for ETHERTYPE_VLAN pkthdr changes)
+  // Get non-const pointers and meaningful names (useful for ETHERTYPE_VLAN pkthdr changes)
   in_pkthdr = pkthdr;
   in_payload = bytes;
 
@@ -872,9 +900,21 @@ void handle_packets(u_char *bpf_filter, const struct pcap_pkthdr *pkthdr, const 
   out_pkthdr->ts.tv_usec = in_pkthdr->ts.tv_usec;
   out_pkthdr->caplen = in_pkthdr->caplen;
 
-
   eth_hdr = (const struct ether_header *) in_payload;
 
+  // If IEEE 802.1Q header, remove it before further processing
+  if (ntohs(eth_hdr->ether_type) == ETHERTYPE_VLAN) {
+      debug_print("%s\n", "\tIEEE 801.1Q header\n");
+      remove_ieee8021q_header(in_payload, in_pkthdr->caplen, out_pkthdr, out_payload);
+
+      // Update source packet with the new one without 802.1q header
+      memcpy(in_payload, out_payload, out_pkthdr->caplen);
+      in_pkthdr->caplen = out_pkthdr->caplen;
+      in_pkthdr->len = out_pkthdr->len;
+
+      // Re-read new ethernet type
+      eth_hdr = (const struct ether_header *) in_payload;
+  }
   // ethertype = *(pkt_in_ptr + 12) << 8 | *(pkt_in_ptr+13);
 
   if (ntohs(eth_hdr->ether_type) != ETHERTYPE_IP) {

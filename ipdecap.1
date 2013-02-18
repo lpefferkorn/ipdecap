@@ -22,7 +22,7 @@ ipdecap \- Decapsulate ESP, GRE, IPIP packets
 .B ipdecap
 [-v] [-l] [-V] -i input.cap -o output.cap [-c esp.conf] [-f <bpf filter>]
 .SH DESCRIPTION
-Ipdecap can decapsulate traffic encapsulated within ESP, GRE and ESP (ipsec) protocols.
+Ipdecap can decapsulate traffic encapsulated within ESP, GRE and ESP (ipsec) protocols, and also remove virtual lan (IEEE 802.1Q) header.
 .P
 It reads packets from an pcap file, removes the encapsulation protocol, and writes them to another pcap file.
 .br
