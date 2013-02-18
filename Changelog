@@ -1,3 +1,6 @@
+(pending)
+  * Remove virtual lan (IEEE 802.1Q) header
+
 v0.5 - 06/01/2013: Loic Pefferkorn <loic-ipdecap@loicp.eu>
   * First public version
   * Upload to GitHub
