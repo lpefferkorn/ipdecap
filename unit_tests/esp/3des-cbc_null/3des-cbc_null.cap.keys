@@ -1,0 +1,20 @@
+192.168.2.101 192.168.2.100 
+	esp mode=tunnel spi=7714454(0x0075b696) reqid=16393(0x00004009)
+	E: 3des-cbc  554c806a 0ef2f49e 063e5859 acbbde02 0f134594 f41aac0d
+	seq=0x00000b8d replay=4 flags=0x00000000 state=mature 
+	created: Jan  4 20:53:37 2013	current: Jan  4 20:54:49 2013
+	diff: 72(s)	hard: 36000(s)	soft: 28800(s)
+	last: Jan  4 20:54:49 2013	hard: 0(s)	soft: 0(s)
+	current: 4071612(bytes)	hard: 0(bytes)	soft: 0(bytes)
+	allocated: 2957	hard: 0	soft: 0
+	sadb_seq=1 pid=1658 refcnt=2
+192.168.2.100 192.168.2.101 
+	esp mode=tunnel spi=230161267(0x0db7fb73) reqid=16394(0x0000400a)
+	E: 3des-cbc  73dace42 5edb6f66 731ab380 f0bf2eaa 13b5a32b 5f6850a3
+	seq=0x0000083d replay=4 flags=0x00000000 state=mature 
+	created: Jan  4 20:53:37 2013	current: Jan  4 20:54:49 2013
+	diff: 72(s)	hard: 36000(s)	soft: 28800(s)
+	last: Jan  4 20:54:49 2013	hard: 0(s)	soft: 0(s)
+	current: 192115(bytes)	hard: 0(bytes)	soft: 0(bytes)
+	allocated: 2109	hard: 0	soft: 0
+	sadb_seq=0 pid=1658 refcnt=1

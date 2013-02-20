@@ -1,0 +1,22 @@
+192.168.2.101 192.168.2.100 
+	esp mode=tunnel spi=171812435(0x0a3da653) reqid=16397(0x0000400d)
+	E: des-cbc  5eaf62e7 81419534
+	A: hmac-md5  ae374ed7 250339d3 7b73d77d ca7cc75c
+	seq=0x00000b4b replay=4 flags=0x00000000 state=mature 
+	created: Jan  4 20:57:42 2013	current: Jan  4 20:58:17 2013
+	diff: 35(s)	hard: 36000(s)	soft: 28800(s)
+	last: Jan  4 20:58:17 2013	hard: 0(s)	soft: 0(s)
+	current: 2376000(bytes)	hard: 0(bytes)	soft: 0(bytes)
+	allocated: 2891	hard: 0	soft: 0
+	sadb_seq=1 pid=1781 refcnt=2
+192.168.2.100 192.168.2.101 
+	esp mode=tunnel spi=229493389(0x0dadca8d) reqid=16398(0x0000400e)
+	E: des-cbc  7114ece2 983b1656
+	A: hmac-md5  6cdb2ce8 36cec320 70f997ce 621a9c62
+	seq=0x0000082e replay=4 flags=0x00000000 state=mature 
+	created: Jan  4 20:57:42 2013	current: Jan  4 20:58:17 2013
+	diff: 35(s)	hard: 36000(s)	soft: 28800(s)
+	last: Jan  4 20:58:17 2013	hard: 0(s)	soft: 0(s)
+	current: 201019(bytes)	hard: 0(bytes)	soft: 0(bytes)
+	allocated: 2094	hard: 0	soft: 0
+	sadb_seq=0 pid=1781 refcnt=1

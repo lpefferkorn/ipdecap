@@ -1,0 +1,7 @@
+2298ec8a62c10439ef61d2d97844236c  ./aes256-cbc_hmac-sha1/aes256-cbc_hmac-sha1.cap.output
+39b45296366369cdce8a2f9e0e5acbf4  ./null_hmac-md5/null_hmac-md5.cap.output
+44dd880dd0340811584441cd768afbc5  ./aes192-cbc_hmac-sha1/aes192-cbc_hmac-sha1.cap.output
+5abd56eaef56593d924a3ab6d5c5c718  ./des-cbc_hmac-md5/des-cbc_hmac-md5.cap.output
+640a4ff87e9dccfe2638e50a5d68be09  ./aes-cbc_hmac-sha1/aes-cbc_hmac-sha1.cap.output
+78ec49fa68666cfe48384b768ca9288b  ./3des-cbc_null/3des-cbc_null.cap.output
+bdd99d9806d39503175e54c8c62d7e11  ./3des-cbc_hmac-sha1/3des-cbc_hmac-sha1.cap.output

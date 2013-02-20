@@ -1,0 +1,15 @@
+Unit tests
+----------
+
+Running "make" in this subdirectory will ensure that ipdecap
+is still able to decapsulate some known encapsulated .cap files.
+
+It will read .cap file, generate a decapsulated .cap.output file, 
+and check if its md5 checksum corresponds to the one previously computed (in the .md5 files).
+
+For esp .cap files, a .cap.conf file contains parameters needed to decrypt the payload.
+
+I will gladly add any contributed pcap file here.
+
+Loïc
+
