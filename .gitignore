@@ -16,7 +16,6 @@
 *.out
 *.app
 CMakeFiles/*
-Makefile
 CMakeCache.txt
 cmake_install.cmake
 ipdecap
