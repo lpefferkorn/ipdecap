@@ -1,0 +1,22 @@
+192.168.2.101 192.168.2.100 
+	esp mode=tunnel spi=135040102(0x080c8c66) reqid=16395(0x0000400b)
+	E: rijndael-cbc  deb3098e 67577550 f23ffb5e c3737c04
+	A: hmac-sha1  881ecd0b 71431e1b 6c35503d 5258bda9 17505da3
+	seq=0x00000b9c replay=4 flags=0x00000000 state=mature 
+	created: Jan  4 20:56:21 2013	current: Jan  4 20:56:49 2013
+	diff: 28(s)	hard: 36000(s)	soft: 28800(s)
+	last: Jan  4 20:56:49 2013	hard: 0(s)	soft: 0(s)
+	current: 3103024(bytes)	hard: 0(bytes)	soft: 0(bytes)
+	allocated: 2972	hard: 0	soft: 0
+	sadb_seq=1 pid=1727 refcnt=2
+192.168.2.100 192.168.2.101 
+	esp mode=tunnel spi=187152668(0x0b27b91c) reqid=16396(0x0000400c)
+	E: rijndael-cbc  2097f9f3 4c240ba5 ee213977 3c6d81f0
+	A: hmac-sha1  a7f7fa6b 9abe8c35 b92be4f5 22d236a4 48378eab
+	seq=0x000007f0 replay=4 flags=0x00000000 state=mature 
+	created: Jan  4 20:56:21 2013	current: Jan  4 20:56:49 2013
+	diff: 28(s)	hard: 36000(s)	soft: 28800(s)
+	last: Jan  4 20:56:49 2013	hard: 0(s)	soft: 0(s)
+	current: 188459(bytes)	hard: 0(bytes)	soft: 0(bytes)
+	allocated: 2032	hard: 0	soft: 0
+	sadb_seq=0 pid=1727 refcnt=1
