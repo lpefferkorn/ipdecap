@@ -14,3 +14,7 @@ ESP
 GRE
 ---
 -notes on ttl (rfc 2784)
+
+Virtual lan
+-----------
+-no support for double-tagged frame (802.1ad)
