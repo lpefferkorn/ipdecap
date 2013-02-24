@@ -17,12 +17,12 @@
 
 .TH "ipdecap" 1
 .SH NAME
-ipdecap \- Decapsulate ESP, GRE, IPIP packets
+ipdecap \- Decapsulate GRE, IPIP, 6in4 and ESP (Ipsec) packets
 .SH SYNOPSIS
 .B ipdecap
 [-v] [-l] [-V] -i input.cap -o output.cap [-c esp.conf] [-f <bpf filter>]
 .SH DESCRIPTION
-Ipdecap can decapsulate traffic encapsulated within ESP, GRE and ESP (ipsec) protocols, and also remove virtual lan (IEEE 802.1Q) header.
+Ipdecap can decapsulate traffic encapsulated within GRE, IPIP, 6in4 and ESP (ipsec) protocols, and can also remove virtual lan (IEEE 802.1Q) header.
 .P
 It reads packets from an pcap file, removes the encapsulation protocol, and writes them to another pcap file.
 .br
@@ -41,7 +41,10 @@ At the moment, the following encapsulation protocols are supported:
 .P
 .B IPIP, GRE (IPv4)
 .P
+.B 6in4 (IPv6 encapsulated within IPv4)
+.P
 .B ESP (ipsec) (IPv4)
+.P
 .RS
 Encryption algorithms: des-cbc 3des-cbc aes128-cbc aes128-ctr null_enc
 .P
@@ -87,8 +90,6 @@ List supported ESP encryption and authentication algorithms
 
 .SH BUGS
 .P
--IPV6 not supported
-.br
 -ESP transport mode not supported
 .br
 .SH NO WARRANTIES
