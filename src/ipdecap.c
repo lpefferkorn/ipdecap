@@ -33,6 +33,7 @@ along with ipdecap.  If not, see <http://www.gnu.org/licenses/>.
 #include <sys/socket.h>
 #include <net/ethernet.h>
 #include <netinet/ip.h>
+#include <netinet/ip6.h>
 #include <netinet/in.h>
 #include <openssl/evp.h>
 #include <errno.h>
@@ -646,6 +647,46 @@ void process_ipip_packet(const u_char *payload, const int payload_len, pcap_hdr 
   new_packet_hdr->len = packet_size;
 }
 
+/* Decapsulate an IPv6 packet
+ *
+ */
+void process_ipv6_packet(const u_char *payload, const int payload_len, pcap_hdr *new_packet_hdr, u_char *new_packet_payload) {
+
+  int packet_size = 0;
+  const u_char *payload_src = NULL;
+  u_char *payload_dst = NULL;
+  const struct iphdr *ip_hdr = NULL;
+  uint16_t ethertype;
+
+  payload_src = payload;
+  payload_dst = new_packet_payload;
+
+  // Copy src and dst ether addr
+  memcpy(payload_dst, payload_src, 2*sizeof(struct ether_addr));
+  payload_src += 2*sizeof(struct ether_addr);
+  payload_dst += 2*sizeof(struct ether_addr);
+
+  // Set ethernet type to IPv6
+  ethertype = htons(ETHERTYPE_IPV6);
+  memcpy(payload_dst, &ethertype, member_size(struct ether_header, ether_type)); 
+  payload_src += member_size(struct ether_header, ether_type);
+  payload_dst += member_size(struct ether_header, ether_type);
+
+  // Read encapsulating IPv4 header to find header lenght and offset to encapsulated IPv6 packet
+  ip_hdr = (const struct iphdr *) payload_src;
+
+  packet_size = payload_len - (ip_hdr->ihl *4);
+                
+  debug_print("\tIPv6: outer IP - hlen:%i iplen:%02i protocol:%02x\n",
+      (ip_hdr->ihl *4), ntohs(ip_hdr->tot_len), ip_hdr->protocol);
+
+  // Shift to encapsulated IPv6 packet, then copy
+  payload_src += ip_hdr->ihl *4;
+
+  memcpy(payload_dst, payload_src, packet_size);
+  new_packet_hdr->len = packet_size;
+}
+
 /*
  * Decapsulate a GRE packet
  *
@@ -937,7 +978,12 @@ void handle_packets(u_char *bpf_filter, const struct pcap_pkthdr *pkthdr, const 
         debug_print("%s\n", "\tIPPROTO_IPIP");
         process_ipip_packet(in_payload, in_pkthdr->caplen, out_pkthdr, out_payload);
         pcap_dump((u_char *)pcap_dumper, out_pkthdr, out_payload);
+        break;
 
+      case IPPROTO_IPV6:
+        debug_print("%s\n", "\tIPPROTO_IPV6");
+        process_ipv6_packet(in_payload, in_pkthdr->caplen, out_pkthdr, out_payload);
+        pcap_dump((u_char *)pcap_dumper, out_pkthdr, out_payload);
         break;
 
       case IPPROTO_GRE:
