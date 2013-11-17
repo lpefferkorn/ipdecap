@@ -29,10 +29,4 @@ AC_FUNC_MALLOC
 AC_CHECK_FUNCS([memset strcspn strdup strtol])
 
 AC_CONFIG_FILES([Makefile src/Makefile])
-#                 unit_tests/802.1q/Makefile
-#                 unit_tests/Makefile
-#                 unit_tests/esp/Makefile
-#                 unit_tests/gre/Makefile
-#                 unit_tests/ip6in4/Makefile
-#                 unit_tests/ipip/Makefile])
 AC_OUTPUT
