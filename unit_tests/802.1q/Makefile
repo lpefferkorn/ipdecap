@@ -6,7 +6,7 @@ clean:
 
 process_pcap: 
 	@echo "*** Processing icmp_802.1q_simple_layer.cap..."
-	../../ipdecap -i icmp_802.1q_simple_layer.cap -o icmp_802.1q_simple_layer.cap.output
+	../../src/ipdecap -i icmp_802.1q_simple_layer.cap -o icmp_802.1q_simple_layer.cap.output
 
 compare_md5:
 	@echo "*** Comparing checksums..."

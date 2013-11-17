@@ -6,7 +6,7 @@ clean:
 
 process_pcap: 
 	@echo "*** Processing gre_version0.cap..."
-	../../ipdecap -i gre_version0.cap -o gre_version0.cap.output
+	../../src/ipdecap -i gre_version0.cap -o gre_version0.cap.output
 
 compare_md5:
 	@echo "*** Comparing checksums..."
