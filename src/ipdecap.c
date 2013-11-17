@@ -42,11 +42,10 @@ along with ipdecap.  If not, see <http://www.gnu.org/licenses/>.
 #include <stdbool.h>
 #include <inttypes.h>
 
+#include "config.h"
 #include "ipdecap.h"
 #include "gre.h"
 #include "esp.h"
-
-#define IPDECAP_VERSION   0.5
 
 // Command line parameters
 static const char *args_str = "vi:o:c:f:Vl";
@@ -77,7 +76,7 @@ pcap_dumper_t *pcap_dumper;
 int ignore_esp;
 
 void usage(void) {
-  printf("Ipdecap %0.1f, decapsulate ESP, GRE, IPIP packets - Loic Pefferkorn\n", IPDECAP_VERSION);
+  printf("Ipdecap %s, decapsulate ESP, GRE, IPIP packets - Loic Pefferkorn\n", PACKAGE_VERSION);
   printf(
   "Usage\n"
   "    ipdecap [-v] [-l] [-V] -i input.cap -o output.cap [-c esp.conf] [-f <bpf filter>] \n"
@@ -94,7 +93,7 @@ void usage(void) {
 }
 
 void print_version() {
-  printf("Ipdecap %0.1f\n", IPDECAP_VERSION);
+  printf("Ipdecap %s\n", PACKAGE_VERSION);
 }
 
 void verbose(const char *format, ...) {
