@@ -1,3 +1,6 @@
+(pending)
+  * Clean unit tests leftovers on make clean
+
 v0.6 - 17/11/2013: Loic Pefferkorn <loic-ipdecap@loicp.eu> 
   * Switch back to Autotools build system
   * Unit testing through pcap samples.
