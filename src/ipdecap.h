@@ -78,7 +78,6 @@ void flows_cleanup(void);
 struct llflow_t * find_flow(char *ip_src, char *ip_dst, u_int32_t spi);
 char *mystrdup(const char *s);
 int parse_esp_conf(char *filename);
-int mystrtol(char *str, u_int32_t *val, int base);
 struct crypt_method_t * find_crypt_method(char *crypt_name);
 struct auth_method_t * find_auth_method(char *auth_name);
 void handle_packets(u_char *user, const struct pcap_pkthdr *h, const u_char *bytes);
