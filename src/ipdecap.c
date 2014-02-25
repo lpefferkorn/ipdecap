@@ -276,6 +276,7 @@ int add_flow(char *ip_src, char *ip_dst, char *crypt_name, char *auth_name, char
   llflow_t *ptr = NULL;
   crypt_method_t *cm = NULL;
   auth_method_t *am = NULL;
+  char *endptr = NULL;  // for strtol
 
   MALLOC(flow, 1, llflow_t);
 
@@ -334,8 +335,16 @@ int add_flow(char *ip_src, char *ip_dst, char *crypt_name, char *auth_name, char
     error("Cannot convert ip");
   }
 
-  if ((mystrtol(spi, &flow->spi, 16)) == -1) {
-    error("mystrtol() cannot convert to long");
+  errno = 0;
+  flow->spi = strtol(spi, &endptr, 16);
+
+  // Check for conversion errors
+  if (errno == ERANGE) {
+    error("Cannot convert spi (strtol: %s)", strerror(errno));
+  }
+
+  if (endptr == spi) {
+      error("Cannot convert spi (strtol: %s)", strerror(errno));
   }
 
   flow->crypt_name = strdup(crypt_name);
@@ -358,27 +367,6 @@ int add_flow(char *ip_src, char *ip_dst, char *crypt_name, char *auth_name, char
   }
 
   free(dec_spi);
-  return 0;
-}
-
-int mystrtol(char *str, u_int32_t *val, int base) {
-
-  char *endptr;
-  u_int32_t work;
-
-  errno = 0;
-  work = strtol(str, &endptr, base);
-
-  if ((errno == ERANGE && (work == LONG_MAX || work == LONG_MIN))
-    || (errno != 0 && work == 0)) {
-    return -1;
-  }
-
-  if (endptr == str) {
-    return -1;
-  }
-
-  *val = work;
   return 0;
 }
 
