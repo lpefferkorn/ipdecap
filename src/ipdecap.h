@@ -76,7 +76,6 @@ void usage(void);
 void print_mac(const unsigned char *mac_ptr);
 void flows_cleanup(void);
 struct llflow_t * find_flow(char *ip_src, char *ip_dst, u_int32_t spi);
-char *mystrdup(const char *s);
 int parse_esp_conf(char *filename);
 struct crypt_method_t * find_crypt_method(char *crypt_name);
 struct auth_method_t * find_auth_method(char *auth_name);

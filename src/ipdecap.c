@@ -370,18 +370,6 @@ int add_flow(char *ip_src, char *ip_dst, char *crypt_name, char *auth_name, char
   return 0;
 }
 
-char *mystrdup(const char *s) {
-
-  char *p = NULL;
-
-  if (s != NULL) {
-    p = malloc((strlen(s)+1)*sizeof(*p));
-    if (p != NULL)
-      strcpy(p, s);
-  }
-  return p;
-}
-
 /*
  * Parse the ipdecap ESP configuration file
  *
