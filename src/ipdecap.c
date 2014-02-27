@@ -552,7 +552,8 @@ void dump_flows() {
  */
 void remove_ieee8021q_header(const u_char *in_payload, const int in_payload_len, pcap_hdr *out_pkthdr, u_char *out_payload) {
   
-  u_char *payload_dst, *payload_src = NULL;
+  u_char *payload_dst = NULL;
+  u_char *payload_src = NULL;
 
   payload_src = in_payload;
   payload_dst = out_payload;
@@ -888,8 +889,10 @@ void handle_packets(u_char *bpf_filter, const struct pcap_pkthdr *pkthdr, const 
   const struct ether_header *eth_hdr = NULL;
   const struct iphdr *ip_hdr = NULL;
   struct bpf_program *bpf = NULL;
-  struct pcap_pkthdr *in_pkthdr, *out_pkthdr = NULL; 
-  u_char *in_payload, *out_payload = NULL;
+  struct pcap_pkthdr *in_pkthdr = NULL;
+  struct pcap_pkthdr *out_pkthdr = NULL;
+  u_char *in_payload = NULL;
+  u_char *out_payload = NULL;
 
   verbose("Processing packet %i\n", packet_num);
 
