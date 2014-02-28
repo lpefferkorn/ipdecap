@@ -551,7 +551,7 @@ void dump_flows() {
  *
  */
 void remove_ieee8021q_header(const u_char *in_payload, const int in_payload_len, pcap_hdr *out_pkthdr, u_char *out_payload) {
-  
+
   u_char *payload_dst = NULL;
   u_char *payload_src = NULL;
 
@@ -567,8 +567,8 @@ void remove_ieee8021q_header(const u_char *in_payload, const int in_payload_len,
   payload_src += VLAN_TAG_LEN;
   memcpy(payload_dst, payload_src, in_payload_len
                                   - 2*sizeof(struct ether_addr)
-                                  - VLAN_TAG_LEN); 
-  
+                                  - VLAN_TAG_LEN);
+
   // Should I check for minimum frame size, even if most drivers don't supply FCS (4 bytes) ?
   out_pkthdr->len = in_payload_len - VLAN_TAG_LEN;
   out_pkthdr->caplen = in_payload_len - VLAN_TAG_LEN;
@@ -644,7 +644,7 @@ void process_ipv6_packet(const u_char *payload, const int payload_len, pcap_hdr 
 
   // Set ethernet type to IPv6
   ethertype = htons(ETHERTYPE_IPV6);
-  memcpy(payload_dst, &ethertype, member_size(struct ether_header, ether_type)); 
+  memcpy(payload_dst, &ethertype, member_size(struct ether_header, ether_type));
   payload_src += member_size(struct ether_header, ether_type);
   payload_dst += member_size(struct ether_header, ether_type);
 
@@ -652,7 +652,7 @@ void process_ipv6_packet(const u_char *payload, const int payload_len, pcap_hdr 
   ip_hdr = (const struct iphdr *) payload_src;
 
   packet_size = payload_len - (ip_hdr->ihl *4);
-                
+
   debug_print("\tIPv6: outer IP - hlen:%i iplen:%02i protocol:%02x\n",
       (ip_hdr->ihl *4), ntohs(ip_hdr->tot_len), ip_hdr->protocol);
 
