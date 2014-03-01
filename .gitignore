@@ -1,4 +1,8 @@
 *.o
+*.output
+cachegrind.out.*
+src/ipdecap
+ipdecap-*.tar.gz
 
 # http://www.gnu.org/software/automake
 
