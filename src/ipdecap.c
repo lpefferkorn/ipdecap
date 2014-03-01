@@ -826,6 +826,9 @@ void process_esp_packet(u_char const *payload, const int payload_len, pcap_hdr *
     payload_src += ivlen;
 
     rc = EVP_DecryptInit_ex(&ctx, cipher,NULL, flow->key, esp_packet.iv);
+    if (rc != 1) {
+      error("Error during the initialization of crypto system. Please report this bug with your .pcap file");
+    }
 
     // ESP payload length to decrypt
     remaining =  ntohs(ip_hdr->tot_len)
