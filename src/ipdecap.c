@@ -555,7 +555,8 @@ void remove_ieee8021q_header(const u_char *in_payload, const int in_payload_len,
   u_char *payload_dst = NULL;
   u_char *payload_src = NULL;
 
-  payload_src = in_payload;
+  // Pointer used to shift through source packet bytes
+  payload_src = (u_char *) in_payload;
   payload_dst = out_payload;
 
   // Copy ethernet src and dst
@@ -910,9 +911,12 @@ void handle_packets(u_char *bpf_filter, const struct pcap_pkthdr *pkthdr, const 
   memset(out_pkthdr, 0, sizeof(struct pcap_pkthdr));
   memset(out_payload, 0, 65535);
 
-  // Get non-const pointers and meaningful names (useful for ETHERTYPE_VLAN pkthdr changes)
-  in_pkthdr = pkthdr;
-  in_payload = bytes;
+  // Pointer used to shift through source packet bytes
+  // updated when vlan header is removed
+  // TODO: don't modify source packet
+
+  in_pkthdr = (struct pcap_pkthdr *) pkthdr;
+  in_payload = (u_char *) bytes;
 
   // Copy source pcap metadata
   out_pkthdr->ts.tv_sec = in_pkthdr->ts.tv_sec;
