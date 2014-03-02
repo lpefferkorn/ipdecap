@@ -20,11 +20,6 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <unistd.h>
-#include <err.h>
-#include <sys/stat.h>
-#include <fcntl.h>
-#include <string.h>
 #include <string.h>
 #include <pcap/pcap.h>
 #include <pcap/vlan.h>
@@ -32,9 +27,10 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <net/ethernet.h>
+#include <netinet/in_systm.h>
+#include <netinet/in.h>
 #include <netinet/ip.h>
 #include <netinet/ip6.h>
-#include <netinet/in.h>
 #include <openssl/evp.h>
 #include <errno.h>
 #include <limits.h>
