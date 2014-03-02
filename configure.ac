@@ -3,12 +3,19 @@
 
 AC_PREREQ([2.69])
 AC_INIT([ipdecap], [0.6], [loic-ipdecap@loicp.eu])
+AC_CANONICAL_SYSTEM
 AC_CONFIG_SRCDIR([src/ipdecap.c])
 AC_CONFIG_HEADERS([config.h])
 AM_INIT_AUTOMAKE
 
 # Checks for programs.
 AC_PROG_CC
+
+case $host in
+	*-*-freebsd*)
+		CPPFLAGS="${CFLAGS} -I/usr/local/include -L/usr/local/lib"
+		;;
+esac
 
 # Checks for libraries.
 AC_CHECK_LIB(pcap, pcap_offline_filter, [], AC_MSG_ERROR(pcap
