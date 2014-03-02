@@ -18,24 +18,23 @@ case $host in
 esac
 
 # Checks for libraries.
-AC_CHECK_LIB(pcap, pcap_offline_filter, [], AC_MSG_ERROR(pcap
-             library not found ))
+AC_CHECK_LIB(pcap, pcap_offline_filter, [],
+             AC_MSG_ERROR(pcap library not found ))
 AC_CHECK_LIB(crypto, EVP_CIPHER_CTX_init, [],
              AC_MSG_ERROR(OpenSSL library not found))
 
 # Checks for header files.
-AC_CHECK_HEADERS([arpa/inet.h fcntl.h inttypes.h limits.h netinet/in.h stdlib.h string.h sys/socket.h unistd.h])
-
-AC_CHECK_HEADERS(pcap/vlan.h, [], [AC_MSG_ERROR(Cannot find libpcap headers)])
+AC_CHECK_HEADERS([string.h pcap/pcap.h pcap/vlan.h arpa/inet.h sys/types.h sys/socket.h getopt.h])
 
 # Checks for typedefs, structures, and compiler characteristics.
 AC_CHECK_HEADER_STDBOOL
 AC_TYPE_UINT16_T
+AC_CHECK_TYPES([struct ip, struct ether_addr, struct ether_header])
 
 # Checks for library functions.
 AC_FUNC_ERROR_AT_LINE
 AC_FUNC_MALLOC
-AC_CHECK_FUNCS([memset strcspn strdup strtol])
+AC_CHECK_FUNCS([getopt_long memset strcspn strdup strtol])
 
 AC_CONFIG_FILES([Makefile src/Makefile])
 AC_OUTPUT
