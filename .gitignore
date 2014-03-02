@@ -1,6 +1,7 @@
 *.o
 *.output
 cachegrind.out.*
+callgrind.out.*
 src/ipdecap
 ipdecap-*.tar.gz
 
