@@ -34,23 +34,23 @@
 #define member_size(type, member) sizeof(((type *)0)->member)
 
 #if DEBUG_FLAG
-  #define error(...)  {                 \
+  #define error(...)  {                                     \
     fprintf(stderr, "error: %s(%d) ", __FILE__, __LINE__);  \
-    fprintf(stderr, __VA_ARGS__);           \
-    exit(EXIT_FAILURE);               \
+    fprintf(stderr, __VA_ARGS__);                           \
+    exit(EXIT_FAILURE);                                     \
   }
 #else
-  #define error(...)  {                 \
-    fprintf(stderr, "error: ");  \
-    fprintf(stderr, __VA_ARGS__);           \
-    exit(EXIT_FAILURE);               \
+  #define error(...)  {           \
+    fprintf(stderr, "error: ");   \
+    fprintf(stderr, __VA_ARGS__); \
+    exit(EXIT_FAILURE);           \
   }
 #endif
 
-#define MALLOC(ptr, count, type) {               \
+#define MALLOC(ptr, count, type) {                      \
   if ( (ptr = malloc(count * sizeof(type))) == NULL) {  \
-    error("Cannot malloc");                \
-  }                             \
+    error("Cannot malloc");                             \
+  }                                                     \
 }
 
 typedef struct pcap_pkthdr pcap_hdr;
