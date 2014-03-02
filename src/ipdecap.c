@@ -590,7 +590,7 @@ void process_ipip_packet(const u_char *payload, const int payload_len, pcap_hdr 
   int packet_size = 0;
   const u_char *payload_src = NULL;
   u_char *payload_dst = NULL;
-  const struct iphdr *ip_hdr = NULL;
+  const struct ip *ip_hdr = NULL;
 
   payload_src = payload;
   payload_dst = new_packet_payload;
@@ -602,20 +602,20 @@ void process_ipip_packet(const u_char *payload, const int payload_len, pcap_hdr 
   packet_size = sizeof(struct ether_header);
 
   // Read encapsulating IP header to find offset to encapsulted IP packet
-  ip_hdr = (const struct iphdr *) payload_src;
+  ip_hdr = (const struct ip *) payload_src;
 
   debug_print("\tIPIP: outer IP - hlen:%i iplen:%02i protocol:%02x\n",
-      (ip_hdr->ihl *4), ntohs(ip_hdr->tot_len), ip_hdr->protocol);
+      (ip_hdr->ip_hl *4), ntohs(ip_hdr->ip_len), ip_hdr->ip_p);
 
   // Shift to encapsulated IP header, read total length
-  payload_src += ip_hdr->ihl *4;
-  ip_hdr = (const struct iphdr *) payload_src;
+  payload_src += ip_hdr->ip_hl *4;
+  ip_hdr = (const struct ip *) payload_src;
 
   debug_print("\tIPIP: inner IP - hlen:%i iplen:%02i protocol:%02x\n",
-      (ip_hdr->ihl *4), ntohs(ip_hdr->tot_len), ip_hdr->protocol);
+      (ip_hdr->ip_hl *4), ntohs(ip_hdr->ip_len), ip_hdr->ip_p);
 
-  memcpy(payload_dst, payload_src, ntohs(ip_hdr->tot_len));
-  packet_size += ntohs(ip_hdr->tot_len);
+  memcpy(payload_dst, payload_src, ntohs(ip_hdr->ip_len));
+  packet_size += ntohs(ip_hdr->ip_len);
 
   new_packet_hdr->len = packet_size;
 }
@@ -628,7 +628,7 @@ void process_ipv6_packet(const u_char *payload, const int payload_len, pcap_hdr 
   int packet_size = 0;
   const u_char *payload_src = NULL;
   u_char *payload_dst = NULL;
-  const struct iphdr *ip_hdr = NULL;
+  const struct ip *ip_hdr = NULL;
   uint16_t ethertype;
 
   payload_src = payload;
@@ -646,15 +646,15 @@ void process_ipv6_packet(const u_char *payload, const int payload_len, pcap_hdr 
   payload_dst += member_size(struct ether_header, ether_type);
 
   // Read encapsulating IPv4 header to find header lenght and offset to encapsulated IPv6 packet
-  ip_hdr = (const struct iphdr *) payload_src;
+  ip_hdr = (const struct ip *) payload_src;
 
-  packet_size = payload_len - (ip_hdr->ihl *4);
+  packet_size = payload_len - (ip_hdr->ip_hl *4);
 
   debug_print("\tIPv6: outer IP - hlen:%i iplen:%02i protocol:%02x\n",
-      (ip_hdr->ihl *4), ntohs(ip_hdr->tot_len), ip_hdr->protocol);
+      (ip_hdr->ip_hl *4), ntohs(ip_hdr->ip_len), ip_hdr->ip_p);
 
   // Shift to encapsulated IPv6 packet, then copy
-  payload_src += ip_hdr->ihl *4;
+  payload_src += ip_hdr->ip_hl *4;
 
   memcpy(payload_dst, payload_src, packet_size);
   new_packet_hdr->len = packet_size;
@@ -671,7 +671,7 @@ void process_gre_packet(const u_char *payload, const int payload_len, pcap_hdr *
   u_int16_t flags;
   const u_char *payload_src = NULL;
   u_char *payload_dst = NULL;
-  const struct iphdr *ip_hdr = NULL;
+  const struct ip *ip_hdr = NULL;
   const struct grehdr *gre_hdr = NULL;
 
   payload_src = payload;
@@ -684,13 +684,13 @@ void process_gre_packet(const u_char *payload, const int payload_len, pcap_hdr *
   packet_size = sizeof(struct ether_header);
 
   // Read encapsulating IP header to find offset to GRE header
-  ip_hdr = (const struct iphdr *) payload_src;
-  payload_src += (ip_hdr->ihl *4);
+  ip_hdr = (const struct ip *) payload_src;
+  payload_src += (ip_hdr->ip_hl *4);
 
   debug_print("\tGRE: outer IP - hlen:%i iplen:%02i protocol:%02x\n",
-    (ip_hdr->ihl *4), ntohs(ip_hdr->tot_len), ip_hdr->protocol);
+    (ip_hdr->ip_hl *4), ntohs(ip_hdr->ip_len), ip_hdr->ip_p);
 
-  packet_size += ntohs(ip_hdr->tot_len) - ip_hdr->ihl*4;
+  packet_size += ntohs(ip_hdr->ip_len) - ip_hdr->ip_hl*4;
 
   // Read GRE header to find offset to encapsulated IP packet
   gre_hdr = (const struct grehdr *) payload_src;
@@ -730,7 +730,7 @@ void process_esp_packet(u_char const *payload, const int payload_len, pcap_hdr *
 
   const u_char *payload_src = NULL;
   u_char *payload_dst = NULL;
-  const struct iphdr *ip_hdr = NULL;
+  const struct ip *ip_hdr = NULL;
   esp_packet_t esp_packet;
   char ip_src[INET_ADDRSTRLEN+1];
   char ip_dst[INET_ADDRSTRLEN+1];
@@ -751,8 +751,8 @@ void process_esp_packet(u_char const *payload, const int payload_len, pcap_hdr *
   packet_size = sizeof(struct ether_header);
 
   // Read encapsulating IP header to find offset to ESP header
-  ip_hdr = (const struct iphdr *) payload_src;
-  payload_src += (ip_hdr->ihl *4);
+  ip_hdr = (const struct ip *) payload_src;
+  payload_src += (ip_hdr->ip_hl *4);
 
   // Read ESP fields
   memcpy(&esp_packet.spi, payload_src, member_size(esp_packet_t, spi));
@@ -761,11 +761,11 @@ void process_esp_packet(u_char const *payload, const int payload_len, pcap_hdr *
   payload_src += member_size(esp_packet_t, seq);
 
   // Extract dst/src IP
-  inet_ntop(AF_INET, &(ip_hdr->saddr), ip_src, INET_ADDRSTRLEN);
+  inet_ntop(AF_INET, &(ip_hdr->ip_src), ip_src, INET_ADDRSTRLEN);
   if (ip_src == NULL)
     error("Cannot convert source ip address for ESP packet\n");
 
-  inet_ntop(AF_INET, &(ip_hdr->daddr), ip_dst, INET_ADDRSTRLEN);
+  inet_ntop(AF_INET, &(ip_hdr->ip_dst), ip_dst, INET_ADDRSTRLEN);
   if (ip_dst == NULL)
     error("Cannot convert destination ip address for ESP packet\n");
 
@@ -786,8 +786,8 @@ void process_esp_packet(u_char const *payload, const int payload_len, pcap_hdr *
   // Differences between (null) encryption algorithms and others algorithms start here
   if (flow->crypt_method->openssl_cipher == NULL) {
 
-    remaining = ntohs(ip_hdr->tot_len)
-    - ip_hdr->ihl*4
+    remaining = ntohs(ip_hdr->ip_len)
+    - ip_hdr->ip_hl*4
     - member_size(esp_packet_t, spi)
     - member_size(esp_packet_t, seq);
 
@@ -827,8 +827,8 @@ void process_esp_packet(u_char const *payload, const int payload_len, pcap_hdr *
     }
 
     // ESP payload length to decrypt
-    remaining =  ntohs(ip_hdr->tot_len)
-    - ip_hdr->ihl*4
+    remaining =  ntohs(ip_hdr->ip_len)
+    - ip_hdr->ip_hl*4
     - member_size(esp_packet_t, spi)
     - member_size(esp_packet_t, seq)
     - ivlen;
@@ -887,7 +887,7 @@ void handle_packets(u_char *bpf_filter, const struct pcap_pkthdr *pkthdr, const 
 
   static int packet_num = 0;
   const struct ether_header *eth_hdr = NULL;
-  const struct iphdr *ip_hdr = NULL;
+  const struct ip *ip_hdr = NULL;
   struct bpf_program *bpf = NULL;
   struct pcap_pkthdr *in_pkthdr = NULL;
   struct pcap_pkthdr *out_pkthdr = NULL;
@@ -948,12 +948,12 @@ void handle_packets(u_char *bpf_filter, const struct pcap_pkthdr *pkthdr, const 
   } else {
 
     // Find encapsulation type
-    ip_hdr = (const struct iphdr *) (in_payload + sizeof(struct ether_header));
+    ip_hdr = (const struct ip *) (in_payload + sizeof(struct ether_header));
 
     //debug_print("\tIP hlen:%i iplen:%02x protocol:%02x payload_len:%i\n",
-      //(ip_hdr->ihl *4), ntohs(ip_hdr->tot_len), ip_hdr->protocol, payload_len);
+      //(ip_hdr->ip_hl *4), ntohs(ip_hdr->ip_len), ip_hdr->ip_p, payload_len);
 
-    switch (ip_hdr->protocol) {
+    switch (ip_hdr->ip_p) {
 
       case IPPROTO_IPIP:
         debug_print("%s\n", "\tIPPROTO_IPIP");
