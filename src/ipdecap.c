@@ -194,8 +194,8 @@ void print_algorithms() {
 void print_mac(const unsigned char *mac_ptr) {
 
   int i;
-  for(i=0;i<ETH_ALEN;i++)
-    i != ETH_ALEN ? printf("%02x:",  *(mac_ptr+i)) : printf("%02x",  *(mac_ptr+i));
+  for(i=0;i<ETHER_ADDR_LEN;i++)
+    i != ETHER_ADDR_LEN ? printf("%02x:",  *(mac_ptr+i)) : printf("%02x",  *(mac_ptr+i));
   printf("\n");
 }
 
