@@ -282,12 +282,14 @@ int add_flow(char *ip_src, char *ip_dst, char *crypt_name, char *auth_name, char
     ip_src, ip_dst, crypt_name, auth_name, spi);
 
   if ((cm = find_crypt_method(crypt_name)) == NULL)
-    err(1, "Cannot find encryption method: %s, please check supported algorithms\n", crypt_name);
+    err(1, "%s: Cannot find encryption method: %s, please check supported algorithms\n",
+        global_args.esp_config_file, crypt_name);
   else
     flow->crypt_method = cm;
 
   if ((am = find_auth_method(auth_name)) == NULL)
-    err(1, "Cannot find authentification method: %s, please check supported algorithms\n", auth_name);
+    err(1, "%s: Cannot find authentification method: %s, please check supported algorithms\n",
+        global_args.esp_config_file, auth_name);
   else
     flow->auth_method = am;
 
@@ -296,22 +298,24 @@ int add_flow(char *ip_src, char *ip_dst, char *crypt_name, char *auth_name, char
 
     // Check for hex format header
     if (key[0] != '0' || (key[1] != 'x' && key[1] != 'X' ) ) {
-      error("Only hex keys are supported and must begin with 0x\n");
+      error("%s: Only hex keys are supported and must begin with 0x\n", global_args.esp_config_file);
     }
     else
       key += 2; // shift over 0x
 
     // Check key length
     if (strlen(key) > EVP_MAX_KEY_LENGTH) {
-      error("Key is too long : %lu > %i\n",
+      error("%s: Key is too long : %lu > %i -  %s\n",
+        global_args.esp_config_file,
         strlen(key),
-        EVP_MAX_KEY_LENGTH
+        EVP_MAX_KEY_LENGTH,
+        key
         );
     }
 
     // Convert key to decimal format
     if ((dec_key = str2dec(key, EVP_MAX_KEY_LENGTH)) == NULL)
-      err(1, "str2dec() key err\n");
+      err(1, "Cannot convert key to decimal format: %s\n", key);
 
   } else {
     dec_key = NULL;
@@ -324,11 +328,11 @@ int add_flow(char *ip_src, char *ip_dst, char *crypt_name, char *auth_name, char
     spi += 2; // shift over 0x
 
   if ((dec_spi = str2dec(spi, ESP_SPI_LEN)) == NULL)
-    err(1, "str2dec() spi err\n");
+    err(1, "Cannot convert spi to decimal format\n");
 
   if (inet_pton(AF_INET, ip_src, &(flow->addr_src)) != 1
     || inet_pton(AF_INET, ip_dst, &(flow->addr_dst)) != 1) {
-    error("Cannot convert ip");
+    error("Cannot convert ip address\n");
   }
 
   errno = 0;
@@ -336,11 +340,11 @@ int add_flow(char *ip_src, char *ip_dst, char *crypt_name, char *auth_name, char
 
   // Check for conversion errors
   if (errno == ERANGE) {
-    error("Cannot convert spi (strtol: %s)", strerror(errno));
+    error("Cannot convert spi (strtol: %s)\n", strerror(errno));
   }
 
   if (endptr == spi) {
-      error("Cannot convert spi (strtol: %s)", strerror(errno));
+      error("Cannot convert spi (strtol: %s)\n", strerror(errno));
   }
 
   flow->crypt_name = strdup(crypt_name);
