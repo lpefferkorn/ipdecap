@@ -36,5 +36,12 @@ AC_FUNC_ERROR_AT_LINE
 AC_FUNC_MALLOC
 AC_CHECK_FUNCS([getopt_long memset strcspn strdup strtol])
 
-AC_CONFIG_FILES([Makefile src/Makefile])
+# Used for unit tests
+AC_CHECK_PROGS([MD5SUM], [md5sum md5 gmd5sum])
+if test "x$MD5SUM" = x; then
+  AC_MSG_WARN(Cannot find a md5 checkum tool. Unit tests cannot be run)
+fi
+AC_SUBST([MD5SUM])
+
+AC_CONFIG_FILES([Makefile src/Makefile unit_tests/ip6in4/Makefile unit_tests/gre/Makefile unit_tests/esp/Makefile unit_tests/ipip/Makefile unit_tests/802.1q/Makefile])
 AC_OUTPUT
