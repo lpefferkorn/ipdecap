@@ -3,7 +3,7 @@
 
 AC_PREREQ([2.69])
 AC_INIT([ipdecap], [0.6], [loic-ipdecap@loicp.eu])
-AC_CANONICAL_SYSTEM
+AC_CANONICAL_HOST
 AC_CONFIG_SRCDIR([src/ipdecap.c])
 AC_CONFIG_HEADERS([config.h])
 AM_INIT_AUTOMAKE
