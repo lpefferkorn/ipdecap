@@ -4,13 +4,13 @@ clean:
 	@echo "*** Cleaning decapsulated pcap files..."
 	-rm -vf *.cap.output
 
-process_pcap: 
+process_pcap:
 	@echo "*** Processing icmp_802.1q_simple_layer.cap..."
 	../../src/ipdecap -i icmp_802.1q_simple_layer.cap -o icmp_802.1q_simple_layer.cap.output
 
 compare_md5:
 	@echo "*** Comparing checksums..."
-	md5sum -c 802.1q.md5
-	
+	@MD5SUM@ -c 802.1q.md5
+
 
 .PHONY = check
