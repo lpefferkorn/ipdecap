@@ -18,6 +18,11 @@
   along with ipdecap.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+/* I used previously OpenSSL EVP_MAX_KEY_LENGTH,
+ * but it has changed between OpenSSL 1.0.1 and 1.1.0 versions.
+ */
+#define MY_MAX_KEY_LENGTH  64
+
 #ifdef DEBUG
   #define DEBUG_FLAG 1
 #else

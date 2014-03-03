@@ -304,17 +304,17 @@ int add_flow(char *ip_src, char *ip_dst, char *crypt_name, char *auth_name, char
       key += 2; // shift over 0x
 
     // Check key length
-    if (strlen(key) > EVP_MAX_KEY_LENGTH) {
+    if (strlen(key) > MY_MAX_KEY_LENGTH) {
       error("%s: Key is too long : %lu > %i -  %s\n",
         global_args.esp_config_file,
         strlen(key),
-        EVP_MAX_KEY_LENGTH,
+        MY_MAX_KEY_LENGTH,
         key
         );
     }
 
     // Convert key to decimal format
-    if ((dec_key = str2dec(key, EVP_MAX_KEY_LENGTH)) == NULL)
+    if ((dec_key = str2dec(key, MY_MAX_KEY_LENGTH)) == NULL)
       err(1, "Cannot convert key to decimal format: %s\n", key);
 
   } else {
