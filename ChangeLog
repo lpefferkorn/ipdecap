@@ -1,13 +1,15 @@
-(pending)
+v0.7 - 2014/03/04: Loic Pefferkorn <loic-ipdecap@loicp.eu>
   * Ported to FreeBSD
+  * Better error messages
+  * Internal clean up
   * Clean unit tests leftovers on make clean
 
-v0.6 - 17/11/2013: Loic Pefferkorn <loic-ipdecap@loicp.eu> 
+v0.6 - 2013/11/17: Loic Pefferkorn <loic-ipdecap@loicp.eu>
   * Switch back to Autotools build system
   * Unit testing through pcap samples.
   * Support for 6in4 protocol (IPv6 encapsulated within IPv4)
   * Remove virtual lan (IEEE 802.1Q) header
 
-v0.5 - 06/01/2013: Loic Pefferkorn <loic-ipdecap@loicp.eu>
+v0.5 - 2013/01/06: Loic Pefferkorn <loic-ipdecap@loicp.eu>
   * First public version
   * Upload to GitHub
