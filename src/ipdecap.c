@@ -322,17 +322,17 @@ int add_flow(char *ip_src, char *ip_dst, char *crypt_name, char *auth_name, char
   }
 
   if (spi[0] != '0' || (spi[1] != 'x' && spi[1] != 'X' ) ) {
-    error("Only hex SPIs are supported and must begin with 0x\n");
+    error("%s: Only hex SPIs are supported and must begin with 0x\n", global_args.esp_config_file);
   }
   else
     spi += 2; // shift over 0x
 
   if ((dec_spi = str2dec(spi, ESP_SPI_LEN)) == NULL)
-    err(1, "Cannot convert spi to decimal format\n");
+    err(1, "%s: Cannot convert spi to decimal format\n", global_args.esp_config_file);
 
   if (inet_pton(AF_INET, ip_src, &(flow->addr_src)) != 1
     || inet_pton(AF_INET, ip_dst, &(flow->addr_dst)) != 1) {
-    error("Cannot convert ip address\n");
+    error("%s: Cannot convert ip address\n", global_args.esp_config_file);
   }
 
   errno = 0;
@@ -340,11 +340,15 @@ int add_flow(char *ip_src, char *ip_dst, char *crypt_name, char *auth_name, char
 
   // Check for conversion errors
   if (errno == ERANGE) {
-    error("Cannot convert spi (strtol: %s)\n", strerror(errno));
+    error("%s: Cannot convert spi (strtol: %s)\n",
+        global_args.esp_config_file,
+        strerror(errno));
   }
 
   if (endptr == spi) {
-      error("Cannot convert spi (strtol: %s)\n", strerror(errno));
+      error("%s: Cannot convert spi (strtol: %s)\n",
+          global_args.esp_config_file,
+          strerror(errno));
   }
 
   flow->crypt_name = strdup(crypt_name);
@@ -498,7 +502,7 @@ struct llflow_t * find_flow(char *ip_src, char *ip_dst, u_int32_t spi) {
 
     rc = inet_ntop(AF_INET, &(f->addr_src), src_txt, INET_ADDRSTRLEN);
     if (rc == NULL)
-      error("inet_ntop() err");
+      error("Cannot convert source IP adddress - inet_ntop() err");
 
     inet_ntop(AF_INET, &(f->addr_dst), dst_txt, INET_ADDRSTRLEN);
     if (rc == NULL)
@@ -815,7 +819,7 @@ void process_esp_packet(u_char const *payload, const int payload_len, pcap_hdr *
   } else {
 
     if ((cipher = EVP_get_cipherbyname(flow->crypt_method->openssl_cipher)) == NULL)
-      error("EVP_get_cipherbyname() err");
+      error("Cannot find cipher %s - EVP_get_cipherbyname() err", flow->crypt_method->openssl_cipher);
 
     EVP_CIPHER_CTX_init(&ctx);
 
