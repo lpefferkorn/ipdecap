@@ -490,7 +490,6 @@ struct auth_method_t * find_auth_method(char *auth_name) {
  */
 struct llflow_t * find_flow(char *ip_src, char *ip_dst, u_int32_t spi) {
 
-  const char *rc;
   struct llflow_t *f = NULL;
   char src_txt[INET_ADDRSTRLEN];
   char dst_txt[INET_ADDRSTRLEN];
@@ -501,12 +500,12 @@ struct llflow_t * find_flow(char *ip_src, char *ip_dst, u_int32_t spi) {
 
   while(f != NULL) {
 
-    rc = inet_ntop(AF_INET, &(f->addr_src), src_txt, INET_ADDRSTRLEN);
-    if (rc == NULL)
+    if (inet_ntop(AF_INET, &(f->addr_src),
+                  src_txt, INET_ADDRSTRLEN) == NULL)
       error("Cannot convert source IP adddress - inet_ntop() err");
 
-    inet_ntop(AF_INET, &(f->addr_dst), dst_txt, INET_ADDRSTRLEN);
-    if (rc == NULL)
+    if (inet_ntop(AF_INET, &(f->addr_dst),
+                  dst_txt, INET_ADDRSTRLEN) == NULL)
       error("inet_ntop() err");
 
     if (strcmp(ip_src, src_txt) == 0) {
