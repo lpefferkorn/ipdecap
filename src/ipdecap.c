@@ -37,6 +37,7 @@
 #include <getopt.h>
 #include <stdbool.h>
 #include <inttypes.h>
+#include <err.h>
 
 #include "config.h"
 #include "ipdecap.h"
