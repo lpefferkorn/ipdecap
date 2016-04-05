@@ -769,12 +769,12 @@ void process_esp_packet(u_char const *payload, const int payload_len, pcap_hdr *
   payload_src += member_size(esp_packet_t, seq);
 
   // Extract dst/src IP
-  inet_ntop(AF_INET, &(ip_hdr->ip_src), ip_src, INET_ADDRSTRLEN);
-  if (ip_src == NULL)
+  if (inet_ntop(AF_INET, &(ip_hdr->ip_src),
+                ip_src, INET_ADDRSTRLEN) == NULL)
     error("Cannot convert source ip address for ESP packet\n");
 
-  inet_ntop(AF_INET, &(ip_hdr->ip_dst), ip_dst, INET_ADDRSTRLEN);
-  if (ip_dst == NULL)
+  if (inet_ntop(AF_INET, &(ip_hdr->ip_dst),
+                ip_dst, INET_ADDRSTRLEN) == NULL)
     error("Cannot convert destination ip address for ESP packet\n");
 
   // Find encryption configuration used
