@@ -15,6 +15,9 @@ case $host in
 	*-*-freebsd*)
 		CPPFLAGS="${CFLAGS} -I/usr/local/include -L/usr/local/lib"
 		;;
+    *-apple-darwin*)
+		CPPFLAGS="${CFLAGS} -I/opt/local/include -L/opt/local/lib"
+		;;
 esac
 
 # Checks for libraries.
