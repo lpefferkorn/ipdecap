@@ -1,3 +1,6 @@
 Hisu Kang: 
 -Suggestion for IEEE 802.1Q support
 -Preliminary patch for 6in4 support (patch adapted)
+
+William Stearns:
+-Tests for OS X compatibility (10.9 with MacPorts project)

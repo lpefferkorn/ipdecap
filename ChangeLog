@@ -1,3 +1,5 @@
+(pending)
+  * Small changes to ensure OS X compatibility
 v0.7 - 2014/03/04: Loic Pefferkorn <loic-ipdecap@loicp.eu>
   * Ported to FreeBSD
   * Better error messages
