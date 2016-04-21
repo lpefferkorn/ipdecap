@@ -4,6 +4,7 @@ cachegrind.out.*
 callgrind.out.*
 src/ipdecap
 ipdecap-*.tar.gz
+.gitconfig
 
 # http://www.gnu.org/software/automake
 
@@ -26,3 +27,12 @@ Makefile.in
 /Makefile
 /src/Makefile
 /src/.deps/
+
+/config.guess
+/config.sub
+/unit_tests/802.1q/Makefile
+/unit_tests/esp/Makefile
+/unit_tests/gre/Makefile
+/unit_tests/ip6in4/Makefile
+/unit_tests/ipip/Makefile
+
