@@ -1,8 +1,8 @@
 #!/usr/bin/awk -f
 
 
-# Copyright (c) 2012-2014 Loïc Pefferkorn <loic-ipdecap@loicp.eu>
-# ipdecap [http://www.loicp.eu/ipdecap]
+# Copyright (c) 2012-2016 Loïc Pefferkorn <loic-ipdecap@loicp.eu>
+# ipdecap [http://loicpefferkorn.net/ipdecap]
 # 
 # This file is part of ipdecap.
 # 

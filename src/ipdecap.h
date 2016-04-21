@@ -1,6 +1,6 @@
 /*
   Copyright (c) 2012-2016 Loïc Pefferkorn <loic-ipdecap@loicp.eu>
-  ipdecap [http://www.loicp.eu/ipdecap]
+  ipdecap [http://loicpefferkorn.net/ipdecap]
 
   This file is part of ipdecap.
 
