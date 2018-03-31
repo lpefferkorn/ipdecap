@@ -537,7 +537,10 @@ int main(int argc, char **argv) {
   OpenSSL_add_all_algorithms();
 
   /* For every packet found in the input file, call handle_packets() */
-  pcap_dispatch(pcap_reader, 0, handle_packets, (u_char *) bpf);
+  rc = pcap_dispatch(pcap_reader, 0, handle_packets, (u_char *) bpf);
+  if (rc == -1) { /* -2 not handled since no calls to pcap_breakloop() are made */
+    error("Error while reading input file: %s\n", pcap_geterr(pcap_reader));
+  }
 
   /* Cleanup */
   pcap_close(pcap_reader);
