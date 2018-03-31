@@ -39,7 +39,7 @@
 #include "ipdecap.h"
 #include <stdint.h>        // for uint16_t
 
-// Command line parameters
+/* Command line parameters */
 static const char *args_str = "vi:o:c:f:Vl";
 
 static const struct option args_long[] = {
@@ -54,11 +54,13 @@ static const struct option args_long[] = {
 
 };
 
-// Global variables
+/* Global variables */
 pcap_dumper_t *pcap_dumper;
 int ignore_esp;
 global_args_t global_args;
 
+/** @brief Print command line usage help
+ */
 void usage(void) {
   printf("Ipdecap %s, decapsulate ESP, GRE, IPIP packets - Loic Pefferkorn\n", PACKAGE_VERSION);
   printf(
@@ -76,13 +78,13 @@ void usage(void) {
   "\n");
 }
 
+/** @brief Print ipdecap version
+ */
 void print_version() {
   printf("Ipdecap %s\n", PACKAGE_VERSION);
 }
 
-/*
- * Parse commande line arguments
- *
+/** @brief Parse command line parameters
  */
 void parse_options(int argc, char **argv) {
 
@@ -139,72 +141,78 @@ void parse_options(int argc, char **argv) {
   }
 }
 
-/*
- * Remove IEEE 802.1Q header (virtual lan)
- *
+/** @brief Remove IEEE 802.1Q header (virtual lan)
+ *  @param in_payload input packet payload
+ *  @param in_payload_len len of input packet payload
+ *  @param out_pkthdr new packet header
+ *  @param out_payload new packet payload
  */
 void remove_ieee8021q_header(const u_char *in_payload, const int in_payload_len, pcap_hdr *out_pkthdr, u_char *out_payload) {
 
   u_char *payload_dst = NULL;
   u_char *payload_src = NULL;
 
-  // Pointer used to shift through source packet bytes
+  /* Pointer used to shift through source packet bytes */
   payload_src = (u_char *) in_payload;
   payload_dst = out_payload;
 
-  // Copy ethernet src and dst
+  /* Copy ethernet src and dst */
   memcpy(payload_dst, payload_src, 2*sizeof(struct ether_addr));
   payload_src += 2*sizeof(struct ether_addr);
   payload_dst += 2*sizeof(struct ether_addr);
 
-  // Skip ieee 802.1q bytes
+  /* Skip ieee 802.1q bytes */
   payload_src += VLAN_TAG_LEN;
   memcpy(payload_dst, payload_src, in_payload_len
                                   - 2*sizeof(struct ether_addr)
                                   - VLAN_TAG_LEN);
 
-  // Should I check for minimum frame size, even if most drivers don't supply FCS (4 bytes) ?
+  /* TODO: Should I check for minimum frame size, even if most drivers don't supply FCS (4 bytes) ? */
   out_pkthdr->len = in_payload_len - VLAN_TAG_LEN;
   out_pkthdr->caplen = in_payload_len - VLAN_TAG_LEN;
 }
 
-/*
- * Simply copy non-IP packet
- *
+/** @brief Simple copy of non-IP packet
+ *  @param in_payload input packet payload
+ *  @param in_payload_len len of input packet payload
+ *  @param out_pkthdr new packet header
+ *  @param out_payload new packet payload
  */
-void process_nonip_packet(const u_char *payload, const int payload_len, pcap_hdr *new_packet_hdr, u_char *new_packet_payload) {
+void process_nonip_packet(const u_char *in_payload, const int in_payload_len, pcap_hdr *out_pkthdr, u_char *out_payload) {
 
-  // Copy full packet
-  memcpy(new_packet_payload, payload, payload_len);
-  new_packet_hdr->len = payload_len;
+  /* Copy full packet */
+  memcpy(out_payload, in_payload, in_payload_len);
+  out_pkthdr->len = in_payload_len;
 }
 
-/* Decapsulate an IPIP packet
- *
+/** @brief Remove IPIP encapsulation
+ *  @param in_payload input packet payload
+ *  @param out_pkthdr new packet header
+ *  @param out_payload new packet payload
  */
-void process_ipip_packet(const u_char *payload, pcap_hdr *new_packet_hdr, u_char *new_packet_payload) {
+void process_ipip_packet(const u_char *in_payload, pcap_hdr *out_pkthdr, u_char *out_payload) {
 
   int packet_size = 0;
   const u_char *payload_src = NULL;
   u_char *payload_dst = NULL;
   const struct ip *ip_hdr = NULL;
 
-  payload_src = payload;
-  payload_dst = new_packet_payload;
+  payload_src = in_payload;
+  payload_dst = out_payload;
 
-  // Copy ethernet header
+  /* Copy ethernet header */
   memcpy(payload_dst, payload_src, sizeof(struct ether_header));
   payload_src += sizeof(struct ether_header);
   payload_dst += sizeof(struct ether_header);
   packet_size = sizeof(struct ether_header);
 
-  // Read encapsulating IP header to find offset to encapsulted IP packet
+  /* Read encapsulating IP header to find offset to encapsulted IP packet */
   ip_hdr = (const struct ip *) payload_src;
 
   debug_print("\tIPIP: outer IP - hlen:%i iplen:%02i protocol:%02x\n",
       (ip_hdr->ip_hl *4), ntohs(ip_hdr->ip_len), ip_hdr->ip_p);
 
-  // Shift to encapsulated IP header, read total length
+  /* Shift to encapsulated IP header, read total length */
   payload_src += ip_hdr->ip_hl *4;
   ip_hdr = (const struct ip *) payload_src;
 
@@ -214,13 +222,16 @@ void process_ipip_packet(const u_char *payload, pcap_hdr *new_packet_hdr, u_char
   memcpy(payload_dst, payload_src, ntohs(ip_hdr->ip_len));
   packet_size += ntohs(ip_hdr->ip_len);
 
-  new_packet_hdr->len = packet_size;
+  out_pkthdr->len = packet_size;
 }
 
-/* Decapsulate an IPv6 packet
- *
+/** @brief Decapsulate an IPv6 packet encapsulated into an IPv4 packet
+ *  @param in_payload input packet payload
+ *  @param in_payload_len len of input packet payload
+ *  @param out_pkthdr new packet header
+ *  @param out_payload new packet payload
  */
-void process_ipv6_packet(const u_char *payload, const int payload_len, pcap_hdr *new_packet_hdr, u_char *new_packet_payload) {
+void process_ipv6_packet(const u_char *in_payload, const int in_payload_len, pcap_hdr *out_pkthdr, u_char *out_payload) {
 
   int packet_size = 0;
   const u_char *payload_src = NULL;
@@ -228,42 +239,43 @@ void process_ipv6_packet(const u_char *payload, const int payload_len, pcap_hdr 
   const struct ip *ip_hdr = NULL;
   uint16_t ethertype;
 
-  payload_src = payload;
-  payload_dst = new_packet_payload;
+  payload_src = in_payload;
+  payload_dst = out_payload;
 
-  // Copy src and dst ether addr
+  /* Copy src and dst ether addr */
   memcpy(payload_dst, payload_src, 2*sizeof(struct ether_addr));
   payload_src += 2*sizeof(struct ether_addr);
   payload_dst += 2*sizeof(struct ether_addr);
 
-  // Set ethernet type to IPv6
+  /* Set ethernet type to IPv6 */
   ethertype = htons(ETHERTYPE_IPV6);
   memcpy(payload_dst, &ethertype, member_size(struct ether_header, ether_type));
   payload_src += member_size(struct ether_header, ether_type);
   payload_dst += member_size(struct ether_header, ether_type);
 
-  // Read encapsulating IPv4 header to find header lenght and offset to encapsulated IPv6 packet
+  /* Read encapsulating IPv4 header to find header length and offset to encapsulated IPv6 packet */
   ip_hdr = (const struct ip *) payload_src;
 
-  packet_size = payload_len - (ip_hdr->ip_hl *4);
+  packet_size = in_payload_len - (ip_hdr->ip_hl *4);
 
   debug_print("\tIPv6: outer IP - hlen:%i iplen:%02i protocol:%02x\n",
       (ip_hdr->ip_hl *4), ntohs(ip_hdr->ip_len), ip_hdr->ip_p);
 
-  // Shift to encapsulated IPv6 packet, then copy
+  /* Shift to encapsulated IPv6 packet, then copy */
   payload_src += ip_hdr->ip_hl *4;
 
   memcpy(payload_dst, payload_src, packet_size);
-  new_packet_hdr->len = packet_size;
+  out_pkthdr->len = packet_size;
 }
 
-/*
- * Decapsulate a GRE packet
- *
+/** @brief Remove GRE encapsulation
+ *  @param in_payload input packet payload
+ *  @param out_pkthdr new packet header
+ *  @param out_payload new packet payload
  */
-void process_gre_packet(const u_char *payload, pcap_hdr *new_packet_hdr, u_char *new_packet_payload) {
+void process_gre_packet(const u_char *in_payload, pcap_hdr *out_pkthdr, u_char *out_payload) {
 
-  //TODO: check si version == 0 1 non supporté car pptp)
+  /*TODO: check si version == 0, 1 non supporté car pptp) */
   int packet_size = 0;
   u_int16_t flags;
   const u_char *payload_src = NULL;
@@ -271,16 +283,16 @@ void process_gre_packet(const u_char *payload, pcap_hdr *new_packet_hdr, u_char 
   const struct ip *ip_hdr = NULL;
   const struct grehdr *gre_hdr = NULL;
 
-  payload_src = payload;
-  payload_dst = new_packet_payload;
+  payload_src = in_payload;
+  payload_dst = out_payload;
 
-  // Copy ethernet header
+  /* Copy ethernet header */
   memcpy(payload_dst, payload_src, sizeof(struct ether_header));
   payload_src += sizeof(struct ether_header);
   payload_dst += sizeof(struct ether_header);
   packet_size = sizeof(struct ether_header);
 
-  // Read encapsulating IP header to find offset to GRE header
+  /* Read encapsulating IP header to find offset to GRE header */
   ip_hdr = (const struct ip *) payload_src;
   payload_src += (ip_hdr->ip_hl *4);
 
@@ -289,7 +301,7 @@ void process_gre_packet(const u_char *payload, pcap_hdr *new_packet_hdr, u_char 
 
   packet_size += ntohs(ip_hdr->ip_len) - ip_hdr->ip_hl*4;
 
-  // Read GRE header to find offset to encapsulated IP packet
+  /* Read GRE header to find offset to encapsulated IP packet */
   gre_hdr = (const struct grehdr *) payload_src;
   debug_print("\tGRE - GRE header: flags:%u protocol:%u\n", gre_hdr->flags, gre_hdr->next_protocol);
 
@@ -298,7 +310,7 @@ void process_gre_packet(const u_char *payload, pcap_hdr *new_packet_hdr, u_char 
   flags = ntohs(gre_hdr->flags);
 
   if (flags & GRE_CHECKSUM || flags & GRE_ROUTING) {
-    payload_src += 4; // Both checksum and offset fields are present
+    payload_src += 4; /* Both checksum and offset fields are present */
     packet_size -= 4;
   }
 
@@ -313,13 +325,15 @@ void process_gre_packet(const u_char *payload, pcap_hdr *new_packet_hdr, u_char 
   }
 
   memcpy(payload_dst, payload_src, packet_size);
-  new_packet_hdr->len = packet_size;
-
+  out_pkthdr->len = packet_size;
 }
 
-/*
- * For each packet, identify its encapsulation protocol and give it to the corresponding process_xx_packet function
- *
+/** @brief For every packet, identify its encapsulation protocol
+ *         and pass it to the corresponding process_xx_packet function
+ *         for encapsulation removal
+ *  @param bpf_filter bpf filter to select packets to be processed
+ *  @param pcap_pkthdr pcap header of the packet to be processed
+ *  @param bytes pointer to packet payload
  */
 void handle_packets(u_char *bpf_filter, const struct pcap_pkthdr *pkthdr, const u_char *bytes) {
 
@@ -334,7 +348,7 @@ void handle_packets(u_char *bpf_filter, const struct pcap_pkthdr *pkthdr, const 
 
   verbose("Processing packet %i\n", packet_num);
 
-  // Check if packet match bpf filter, if given
+  /* Check if packet match bpf filter, if given */
   if (bpf_filter != NULL) {
     bpf = (struct bpf_program *) bpf_filter;
     if (pcap_offline_filter(bpf, pkthdr, bytes)  == 0) {
@@ -348,44 +362,46 @@ void handle_packets(u_char *bpf_filter, const struct pcap_pkthdr *pkthdr, const 
   memset(out_pkthdr, 0, sizeof(struct pcap_pkthdr));
   memset(out_payload, 0, 65535);
 
-  // Pointer used to shift through source packet bytes
-  // updated when vlan header is removed
-  // TODO: don't modify source packet
+  /*
+   * Pointer used to shift through source packet bytes
+   * updated when vlan header is removed
+   * TODO: don't modify source packet
+   */
 
   in_pkthdr = (struct pcap_pkthdr *) pkthdr;
   in_payload = (u_char *) bytes;
 
-  // Copy source pcap metadata
+  /* Copy source pcap metadata */
   out_pkthdr->ts.tv_sec = in_pkthdr->ts.tv_sec;
   out_pkthdr->ts.tv_usec = in_pkthdr->ts.tv_usec;
   out_pkthdr->caplen = in_pkthdr->caplen;
 
   eth_hdr = (const struct ether_header *) in_payload;
 
-  // If IEEE 802.1Q header, remove it before further processing
+  /* If IEEE 802.1Q header, remove it before further processing */
   if (ntohs(eth_hdr->ether_type) == ETHERTYPE_VLAN) {
       debug_print("%s\n", "\tIEEE 801.1Q header\n");
       remove_ieee8021q_header(in_payload, in_pkthdr->caplen, out_pkthdr, out_payload);
 
-      // Update source packet with the new one without 802.1q header
+      /* Update source packet with the new one without 802.1q header */
       memcpy(in_payload, out_payload, out_pkthdr->caplen);
       in_pkthdr->caplen = out_pkthdr->caplen;
       in_pkthdr->len = out_pkthdr->len;
 
-      // Re-read new ethernet type
+      /* Re-read new ethernet type */
       eth_hdr = (const struct ether_header *) in_payload;
   }
-  // ethertype = *(pkt_in_ptr + 12) << 8 | *(pkt_in_ptr+13);
+  /* ethertype = *(pkt_in_ptr + 12) << 8 | *(pkt_in_ptr+13); */
 
   if (ntohs(eth_hdr->ether_type) != ETHERTYPE_IP) {
 
-    // Non IP packet ? Just copy
+    /* Non IP packet ? Just copy */
     process_nonip_packet(in_payload, in_pkthdr->caplen, out_pkthdr, out_payload);
     pcap_dump((u_char *)pcap_dumper, out_pkthdr, out_payload);
 
   } else {
 
-    // Find encapsulation type
+    /* Find encapsulation type */
     ip_hdr = (const struct ip *) (in_payload + sizeof(struct ether_header));
 
     //debug_print("\tIP hlen:%i iplen:%02x protocol:%02x payload_len:%i\n",
@@ -426,18 +442,18 @@ void handle_packets(u_char *bpf_filter, const struct pcap_pkthdr *pkthdr, const 
         break;
 
       default:
-        // Copy not encapsulated/unknown encpsulation protocol packets, like non_ip packets
+        /* Copy not encapsulated/unknown encpsulation protocol packets, like non_ip packets */
         process_nonip_packet(in_payload, in_pkthdr->caplen, out_pkthdr, out_payload);
         pcap_dump((u_char *)pcap_dumper, out_pkthdr, out_payload);
         verbose("Copying packet %i: not encapsulated/unknown encapsulation protocol\n", packet_num);
 
     }
-  } // if (ntohs(eth_hdr->ether_type) != ETHERTYPE_IP)
+  } /* if (ntohs(eth_hdr->ether_type) != ETHERTYPE_IP) */
 
   free(out_pkthdr);
   free(out_payload);
 
-  exit: // Avoid several 'return' in middle of code
+  exit: /* Avoid several 'return' in middle of code */
     packet_num++;
 }
 
@@ -454,6 +470,7 @@ int main(int argc, char **argv) {
 
   parse_options(argc, argv);
 
+  /* Just print list of supported ESP algorithms */
   if (global_args.list_algo == true) {
     print_algorithms();
     exit(0);
@@ -479,7 +496,7 @@ int main(int argc, char **argv) {
 
   p = pcap_open_dead(DLT_EN10MB, MAXIMUM_SNAPLEN);
 
-  // try to compile bpf filter for input packets
+  /* try to compile bpf filter for input packets */
   if (global_args.bpf_filter != NULL) {
     MALLOC(bpf, 1, struct bpf_program);
     verbose("Using bpf filter:%s\n", global_args.bpf_filter);
@@ -487,12 +504,13 @@ int main(int argc, char **argv) {
       error("pcap_compile() %s\n", pcap_geterr(p));
     }
   }
+  /* Open new output file for packets with encapsulation removed */
   pcap_dumper = pcap_dump_open(p, global_args.output_file);
 
   if (pcap_dumper == NULL)
     error("Cannot open output file %s : %s\n", global_args.output_file, errbuf);
 
-  // Try to read ESP configuration file
+  /* Try to read ESP configuration file */
   if (global_args.esp_config_file != NULL) {
     rc = parse_esp_conf(global_args.esp_config_file);
     switch(rc) {
@@ -512,20 +530,20 @@ int main(int argc, char **argv) {
   }
 
   #ifdef DEBUG
+    /* Dump ESP configuration found */
     dump_flows();
   #endif
 
   OpenSSL_add_all_algorithms();
 
-  // Dispatch to handle_packet function each packet read from the pcap file
+  /* For every packet found in the input file, call handle_packets() */
   pcap_dispatch(pcap_reader, 0, handle_packets, (u_char *) bpf);
 
+  /* Cleanup */
   pcap_close(pcap_reader);
   pcap_close(p);
   pcap_dump_close(pcap_dumper);
-
   EVP_cleanup();
-
   flows_cleanup();
 
   return 0;
