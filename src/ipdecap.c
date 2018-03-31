@@ -544,7 +544,7 @@ int main(int argc, char **argv) {
   pcap_close(p);
   pcap_dump_close(pcap_dumper);
   EVP_cleanup();
-  flows_cleanup();
+  esp_flows_cleanup();
 
   return 0;
 }

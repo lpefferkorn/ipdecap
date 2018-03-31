@@ -84,8 +84,9 @@ crypt_method_t des_cbc        = { .name = "des-cbc",    .openssl_cipher = "des-c
 // Linked list, point to first element
 crypt_method_t *crypt_method_list = &des_cbc;
 
-// Cleanup allocated flow during configuration file parsing (makes valgrind happy)
-void flows_cleanup() {
+/** @brief Cleanup allocated ESP flows configuration during file parsing (makes valgrind happy)
+ */
+void esp_flows_cleanup() {
 
   llflow_t *f, *tmp;
   f = flow_head;
@@ -101,11 +102,17 @@ void flows_cleanup() {
   }
 }
 
-/*
- * Add to the linked list flow_head this ESP flow, read from configuration file by parse_esp_conf
+/** @brief Add to the linked list flow_head this ESP flow,
+ *         read from configuration file by parse_esp_conf
+ *  @param ip_src source IP
+ *  @param ip_dst destination IP
+ *  @param crypt_name name of the encryption algorithm
+ *  @param auth_name name of the authentication algorithm
+ *  @param key algorithm shared key
+ *  @param spi Security Parameters Index 
  *
  */
-int add_flow(char *ip_src, char *ip_dst, char *crypt_name, char *auth_name, char *key, char *spi) {
+int esp_add_flow(char *ip_src, char *ip_dst, char *crypt_name, char *auth_name, char *key, char *spi) {
 
   unsigned char *dec_key = NULL;
   unsigned char *dec_spi = NULL;
@@ -113,7 +120,7 @@ int add_flow(char *ip_src, char *ip_dst, char *crypt_name, char *auth_name, char
   llflow_t *ptr = NULL;
   crypt_method_t *cm = NULL;
   auth_method_t *am = NULL;
-  char *endptr = NULL;  // for strtol
+  char *endptr = NULL;  /* for strtol */
 
   MALLOC(flow, 1, llflow_t);
 
@@ -122,29 +129,29 @@ int add_flow(char *ip_src, char *ip_dst, char *crypt_name, char *auth_name, char
   debug_print("\tadd_flow() src:%s dst:%s crypt:%s auth:%s spi:%s\n",
     ip_src, ip_dst, crypt_name, auth_name, spi);
 
-  if ((cm = find_crypt_method(crypt_name)) == NULL)
+  if ((cm = esp_find_crypt_method(crypt_name)) == NULL)
     err(1, "%s: Cannot find encryption method: %s, please check supported algorithms\n",
         global_args.esp_config_file, crypt_name);
   else
     flow->crypt_method = cm;
 
-  if ((am = find_auth_method(auth_name)) == NULL)
+  if ((am = esp_find_auth_method(auth_name)) == NULL)
     err(1, "%s: Cannot find authentification method: %s, please check supported algorithms\n",
         global_args.esp_config_file, auth_name);
   else
     flow->auth_method = am;
 
-  // If non NULL encryption, check key
+  /* If non NULL encryption, check key */
   if (cm->openssl_cipher != NULL)  {
 
-    // Check for hex format header
+    /* Check for hex format header */
     if (key[0] != '0' || (key[1] != 'x' && key[1] != 'X' ) ) {
       error("%s: Only hex keys are supported and must begin with 0x\n", global_args.esp_config_file);
     }
     else
-      key += 2; // shift over 0x
+      key += 2; /* Skip '0x' */
 
-    // Check key length
+    /* Check key length */
     if (strlen(key) > MY_MAX_KEY_LENGTH) {
       error("%s: Key is too long : %lu > %i -  %s\n",
         global_args.esp_config_file,
@@ -154,7 +161,7 @@ int add_flow(char *ip_src, char *ip_dst, char *crypt_name, char *auth_name, char
         );
     }
 
-    // Convert key to decimal format
+    /* Convert key to decimal format */
     if ((dec_key = str2dec(key, MY_MAX_KEY_LENGTH)) == NULL)
       err(1, "Cannot convert key to decimal format: %s\n", key);
 
@@ -166,7 +173,7 @@ int add_flow(char *ip_src, char *ip_dst, char *crypt_name, char *auth_name, char
     error("%s: Only hex SPIs are supported and must begin with 0x\n", global_args.esp_config_file);
   }
   else
-    spi += 2; // shift over 0x
+    spi += 2; /* Skip '0x' */
 
   if ((dec_spi = str2dec(spi, ESP_SPI_LEN)) == NULL)
     err(1, "%s: Cannot convert spi to decimal format\n", global_args.esp_config_file);
@@ -179,7 +186,7 @@ int add_flow(char *ip_src, char *ip_dst, char *crypt_name, char *auth_name, char
   errno = 0;
   flow->spi = strtol(spi, &endptr, 16);
 
-  // Check for conversion errors
+  /* Check for conversion errors */
   if (errno == ERANGE) {
     error("%s: Cannot convert spi (strtol: %s)\n",
         global_args.esp_config_file,
@@ -200,7 +207,7 @@ int add_flow(char *ip_src, char *ip_dst, char *crypt_name, char *auth_name, char
   EVP_CIPHER_CTX_init(ctx);
   flow->ctx = ctx;
 
-  // Adding to linked list
+  /* Adding to linked list */
   if (flow_head == NULL) {
     flow_head = flow;
     flow_head->next = NULL;
@@ -215,11 +222,13 @@ int add_flow(char *ip_src, char *ip_dst, char *crypt_name, char *auth_name, char
   return 0;
 }
 
-/*
- * Try to find an ESP configuration to decrypt the flow between ip_src and ip_dst
+/** @brief Try to find an ESP configuration to decrypt the flow between ip_src and ip_dst
+ *  @param ip_src source IP
+ *  @param ip_dst destination IP
+ *  @param spi Security Parameters Index
  *
  */
-struct llflow_t * find_flow(char *ip_src, char *ip_dst, u_int32_t spi) {
+struct llflow_t * esp_find_flow(char *ip_src, char *ip_dst, u_int32_t spi) {
 
   struct llflow_t *f = NULL;
   char src_txt[INET_ADDRSTRLEN];
@@ -253,11 +262,9 @@ struct llflow_t * find_flow(char *ip_src, char *ip_dst, u_int32_t spi) {
 }
 
 
-/*
- * Print known ESP flows, read from the ESP confguration file
- *
+/** @brief Print known ESP flows, read from the ESP confguration file
  */
-void dump_flows() {
+void esp_dump_flows() {
 
   char src[INET_ADDRSTRLEN];
   char dst[INET_ADDRSTRLEN];
@@ -282,11 +289,11 @@ void dump_flows() {
   }
 }
 
-/*
- * Find the corresponding crypt_method_t from its name
- *
+/** @brief Find the corresponding crypt_method_t from its name
+ *  @param crypt_name plaintext name of the encryption algorithm
+ *  @return matching struct crypt_method_t, NULL if none found
  */
-struct crypt_method_t * find_crypt_method(char *crypt_name) {
+struct crypt_method_t * esp_find_crypt_method(char *crypt_name) {
 
   int rc;
   struct crypt_method_t *cm = NULL;
@@ -303,11 +310,11 @@ struct crypt_method_t * find_crypt_method(char *crypt_name) {
   return NULL;
 }
 
-/*
- * Find the corresponding auth_method_t from its name
- *
+/** @brief Find the corresponding auth_method_t from its name
+ *  @param auth_name plaintext name of the authentication algorithm
+ *  @return matching struct auth_method_t, NULL if none found
  */
-struct auth_method_t * find_auth_method(char *auth_name) {
+struct auth_method_t * esp_find_auth_method(char *auth_name) {
 
   int rc;
   struct auth_method_t *am = NULL;
@@ -324,6 +331,8 @@ struct auth_method_t * find_auth_method(char *auth_name) {
   return NULL;
 }
 
+/** @brief Print supported ESP algorithms
+ */
 void print_algorithms() {
 
   printf("Supported ESP algorithms:\n"
@@ -348,9 +357,9 @@ void print_algorithms() {
 
 }
 
-/*
- * Parse the ipdecap ESP configuration file
- *
+/** @brief Parse the ipdecap ESP configuration file
+ *  @param filename path of the file with the ESP configuration for decapsulation
+ *  @return 0 on success, 1 on failure
  */
 int parse_esp_conf(char *filename) {
 
@@ -375,15 +384,15 @@ int parse_esp_conf(char *filename) {
     line++;
     copy = strdup(buffer);
 
-    // Empty line
+    /* Empty line */
     if (strlen(copy) == 1)
      continue;
 
-    // Commented line
+    /* Commented line */
     if (copy[0] == '#')
       continue;
 
-    // Remove new line character
+    /* Remove new line character */
     copy[strcspn(copy, "\n")] = '\0';
 
     if ((src = strtok(copy, delimiters)) == NULL)
@@ -407,7 +416,7 @@ int parse_esp_conf(char *filename) {
     debug_print("parse_esp_conf() src:%s dst:%s crypt:%s auth:%s key:%s spi:%s\n",
       src, dst, crypt, auth, key, spi);
 
-    add_flow(src, dst, crypt, auth, key, spi);
+    esp_add_flow(src, dst, crypt, auth, key, spi);
     free(copy);
   }
 
@@ -415,13 +424,15 @@ int parse_esp_conf(char *filename) {
   return 0;
 }
 
-/*
- * Decapsulate an ESP packet:
- * -try to find an ESP configuration entry (ip, spi, algorithms)
- * -decrypt packet with the configuration found
- *
+/** @brief Decapsulate an ESP packet:
+ *         - try to find a matching ESP configuration entry (ip, spi, algorithms)
+ *         - decrypt packet with the configuration found
+ *  @param in_payload payload of input packet
+ *  @param in_payload_len length on input packet payload
+ *  @param out_pkthdr new packet header
+ *  @param out_payload new packed payload
  */
-void process_esp_packet(u_char const *payload, const int payload_len, pcap_hdr *new_packet_hdr, u_char *new_packet_payload) {
+void process_esp_packet(u_char const *in_payload, const int in_payload_len, pcap_hdr *out_pkthdr, u_char *out_payload) {
 
   const u_char *payload_src = NULL;
   u_char *payload_dst = NULL;
@@ -435,27 +446,27 @@ void process_esp_packet(u_char const *payload, const int payload_len, pcap_hdr *
   int packet_size, rc, len, remaining;
   int ivlen;
 
-  // TODO: memset sur new_packet_payload
-  payload_src = payload;
-  payload_dst = new_packet_payload;
+  /* TODO: memset sur new_packet_payload */
+  payload_src = in_payload;
+  payload_dst = out_payload;
 
-  // Copy ethernet header
+  /* Copy ethernet header */
   memcpy(payload_dst, payload_src, sizeof(struct ether_header));
   payload_src += sizeof(struct ether_header);
   payload_dst += sizeof(struct ether_header);
   packet_size = sizeof(struct ether_header);
 
-  // Read encapsulating IP header to find offset to ESP header
+  /* Read encapsulating IP header to find offset to ESP header */
   ip_hdr = (const struct ip *) payload_src;
   payload_src += (ip_hdr->ip_hl *4);
 
-  // Read ESP fields
+  /* Read ESP fields */
   memcpy(&esp_packet.spi, payload_src, member_size(esp_packet_t, spi));
   payload_src += member_size(esp_packet_t, spi);
   memcpy(&esp_packet.seq, payload_src, member_size(esp_packet_t, seq));
   payload_src += member_size(esp_packet_t, seq);
 
-  // Extract dst/src IP
+  /* Extract dst/src IP */
   if (inet_ntop(AF_INET, &(ip_hdr->ip_src),
                 ip_src, INET_ADDRSTRLEN) == NULL)
     error("Cannot convert source ip address for ESP packet\n");
@@ -464,13 +475,13 @@ void process_esp_packet(u_char const *payload, const int payload_len, pcap_hdr *
                 ip_dst, INET_ADDRSTRLEN) == NULL)
     error("Cannot convert destination ip address for ESP packet\n");
 
-  // Find encryption configuration used
-  flow = find_flow(ip_src, ip_dst, esp_packet.spi);
+  /* Find encryption configuration used */
+  flow = esp_find_flow(ip_src, ip_dst, esp_packet.spi);
 
   if (flow == NULL) {
     verbose("No suitable flow configuration found for src:%s dst:%s spi: %lx copying raw packet\n",
       ip_src, ip_dst, esp_packet.spi);
-      process_nonip_packet(payload, payload_len, new_packet_hdr, new_packet_payload);
+      process_nonip_packet(in_payload, in_payload_len, out_pkthdr, out_payload);
       return;
 
   } else {
@@ -478,7 +489,7 @@ void process_esp_packet(u_char const *payload, const int payload_len, pcap_hdr *
       ip_src, ip_dst, flow->crypt_name, flow->auth_name, (long unsigned) flow->spi);
   }
 
-  // Differences between (null) encryption algorithms and others algorithms start here
+  /* Differences between (null) encryption algorithms and others algorithms start here */
   if (flow->crypt_method->openssl_cipher == NULL) {
 
     remaining = ntohs(ip_hdr->ip_len)
@@ -486,7 +497,7 @@ void process_esp_packet(u_char const *payload, const int payload_len, pcap_hdr *
     - member_size(esp_packet_t, spi)
     - member_size(esp_packet_t, seq);
 
-    // If non null authentication, discard authentication data
+    /* If non null authentication, discard authentication data */
     if (flow->auth_method->openssl_auth == NULL) {
       remaining -= flow->auth_method->len;
     }
@@ -501,7 +512,7 @@ void process_esp_packet(u_char const *payload, const int payload_len, pcap_hdr *
     packet_size += remaining;
 
     memcpy(payload_dst, payload_src, remaining);
-    new_packet_hdr->len = packet_size;
+    out_pkthdr->len = packet_size;
 
   } else {
 
@@ -510,7 +521,7 @@ void process_esp_packet(u_char const *payload, const int payload_len, pcap_hdr *
 
     EVP_CIPHER_CTX_init(ctx);
 
-    // Copy initialization vector
+    /* Copy initialization vector */
     ivlen = EVP_CIPHER_iv_length(cipher);
     memset(&esp_packet.iv, 0, EVP_MAX_IV_LENGTH);
     memcpy(&esp_packet.iv, payload_src, ivlen);
@@ -521,51 +532,51 @@ void process_esp_packet(u_char const *payload, const int payload_len, pcap_hdr *
       error("Error during the initialization of crypto system. Please report this bug with your .pcap file");
     }
 
-    // ESP payload length to decrypt
+    /* ESP payload length to decrypt */
     remaining =  ntohs(ip_hdr->ip_len)
     - ip_hdr->ip_hl*4
     - member_size(esp_packet_t, spi)
     - member_size(esp_packet_t, seq)
     - ivlen;
 
-    // If non null authentication, discard authentication data
+    /* If non null authentication, discard authentication data */
     if (flow->auth_method->openssl_auth == NULL) {
       remaining -= flow->auth_method->len;
     }
 
-    // Do the decryption work
+    /* Do the decryption work */
     rc = EVP_DecryptUpdate(ctx, payload_dst, &len, payload_src, remaining);
     packet_size += len;
 
     if (rc != 1) {
       verbose("Warning: cannot decrypt packet with EVP_DecryptUpdate(). Corrupted ? Cipher is %s, copying raw packet...\n",
         flow->crypt_method->openssl_cipher);
-      process_nonip_packet(payload, payload_len, new_packet_hdr, new_packet_payload);
+      process_nonip_packet(in_payload, in_payload_len, out_pkthdr, out_payload);
         return;
     }
 
     EVP_DecryptFinal_ex(ctx, payload_dst+len, &len);
     packet_size += len;
 
-    // http://www.mail-archive.com/openssl-users@openssl.org/msg23434.html
+    /* http://www.mail-archive.com/openssl-users@openssl.org/msg23435.html */
     packet_size +=EVP_CIPHER_CTX_block_size(ctx);
 
-    u_char *pad_len = (new_packet_payload + packet_size -2);
+    u_char *pad_len = (out_payload + packet_size -2);
 
-    // Detect obviously badly decrypted packet
+    /* Detect obviously badly decrypted packet */
     if (*pad_len >=  EVP_CIPHER_CTX_block_size(ctx)) {
       verbose("Warning: invalid pad_len field, wrong encryption key ? copying raw packet...\n");
-      process_nonip_packet(payload, payload_len, new_packet_hdr, new_packet_payload);
+      process_nonip_packet(in_payload, in_payload_len, out_pkthdr, out_payload);
       return;
     }
 
-    // Remove next protocol, pad len fields and padding
+    /* Remove next protocol, pad len fields and padding */
     packet_size = packet_size
       - member_size(esp_packet_t, pad_len)
       - member_size(esp_packet_t, next_header)
       - *pad_len;
 
-    new_packet_hdr->len = packet_size;
+    out_pkthdr->len = packet_size;
 
     EVP_CIPHER_CTX_cleanup(ctx);
 

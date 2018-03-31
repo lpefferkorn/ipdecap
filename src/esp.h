@@ -33,13 +33,13 @@
 
 int parse_esp_conf(char *filename);
 void process_esp_packet(const u_char *payload, const int payload_len, pcap_hdr *new_packet_hdr, u_char *new_packet_payload);
-int add_flow(char *ip_src, char *ip_dst, char *crypt_name, char *auth_name, char *key, char *spi);
-void dump_flows(void);
-void flows_cleanup(void);
+int esp_add_flow(char *ip_src, char *ip_dst, char *crypt_name, char *auth_name, char *key, char *spi);
+void esp_dump_flows(void);
+void esp_flows_cleanup(void);
 void print_algorithms(void);
-struct llflow_t * find_flow(char *ip_src, char *ip_dst, u_int32_t spi);
-struct crypt_method_t * find_crypt_method(char *crypt_name);
-struct auth_method_t * find_auth_method(char *auth_name);
+struct llflow_t * esp_find_flow(char *ip_src, char *ip_dst, u_int32_t spi);
+struct crypt_method_t * esp_find_crypt_method(char *crypt_name);
+struct auth_method_t * esp_find_auth_method(char *auth_name);
 
 typedef struct sockaddr_storage sa_sto;
 

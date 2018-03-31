@@ -1,0 +1,294 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+ACLOCAL	Makefile	/^ACLOCAL = ${SHELL} \/home\/loic\/ipdecap\/missing aclocal-1.15$/;"	m
+ACLOCAL_M4	Makefile	/^ACLOCAL_M4 = $(top_srcdir)\/aclocal.m4$/;"	m
+AMTAR	Makefile	/^AMTAR = $${TAR-tar}$/;"	m
+AM_CPPFLAGS	Makefile	/^AM_CPPFLAGS = -Wall -Wextra -Wshadow -Wstrict-prototypes -Wunreachable-code$/;"	m
+AM_DEFAULT_VERBOSITY	Makefile	/^AM_DEFAULT_VERBOSITY = 1$/;"	m
+AM_V_CC	Makefile	/^AM_V_CC = $(am__v_CC_$(V))$/;"	m
+AM_V_CCLD	Makefile	/^AM_V_CCLD = $(am__v_CCLD_$(V))$/;"	m
+AM_V_GEN	Makefile	/^AM_V_GEN = $(am__v_GEN_$(V))$/;"	m
+AM_V_P	Makefile	/^AM_V_P = $(am__v_P_$(V))$/;"	m
+AM_V_at	Makefile	/^AM_V_at = $(am__v_at_$(V))$/;"	m
+AUTOCONF	Makefile	/^AUTOCONF = ${SHELL} \/home\/loic\/ipdecap\/missing autoconf$/;"	m
+AUTOHEADER	Makefile	/^AUTOHEADER = ${SHELL} \/home\/loic\/ipdecap\/missing autoheader$/;"	m
+AUTOMAKE	Makefile	/^AUTOMAKE = ${SHELL} \/home\/loic\/ipdecap\/missing automake-1.15$/;"	m
+AWK	Makefile	/^AWK = mawk$/;"	m
+CC	Makefile	/^CC = gcc$/;"	m
+CCDEPMODE	Makefile	/^CCDEPMODE = depmode=gcc3$/;"	m
+CCLD	Makefile	/^CCLD = $(CC)$/;"	m
+CFLAGS	Makefile	/^CFLAGS = -g -O2$/;"	m
+COMPILE	Makefile	/^COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \\$/;"	m
+CONFIG_CLEAN_FILES	Makefile	/^CONFIG_CLEAN_FILES =$/;"	m
+CONFIG_CLEAN_VPATH_FILES	Makefile	/^CONFIG_CLEAN_VPATH_FILES =$/;"	m
+CONFIG_HEADER	Makefile	/^CONFIG_HEADER = $(top_builddir)\/config.h$/;"	m
+CONF_BUFFER_SIZE	esp.h	31;"	d
+CPP	Makefile	/^CPP = gcc -E$/;"	m
+CPPFLAGS	Makefile	/^CPPFLAGS = $/;"	m
+CTAGS	Makefile	/^CTAGS = ctags$/;"	m
+CYGPATH_W	Makefile	/^CYGPATH_W = echo$/;"	m
+DEBUG_FLAG	utils.h	49;"	d
+DEBUG_FLAG	utils.h	51;"	d
+DEFAULT_INCLUDES	Makefile	/^DEFAULT_INCLUDES = -I. -I$(top_builddir)$/;"	m
+DEFS	Makefile	/^DEFS = -DHAVE_CONFIG_H$/;"	m
+DEPDIR	Makefile	/^DEPDIR = .deps$/;"	m
+DISTFILES	Makefile	/^DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)$/;"	m
+DIST_COMMON	Makefile	/^DIST_COMMON = $(srcdir)\/Makefile.am $(am__DIST_COMMON)$/;"	m
+DIST_SOURCES	Makefile	/^DIST_SOURCES = $(ipdecap_SOURCES)$/;"	m
+ECHO_C	Makefile	/^ECHO_C = $/;"	m
+ECHO_N	Makefile	/^ECHO_N = -n$/;"	m
+ECHO_T	Makefile	/^ECHO_T = $/;"	m
+EGREP	Makefile	/^EGREP = \/bin\/grep -E$/;"	m
+ESP_SPI_LEN	esp.h	53;"	d
+ETAGS	Makefile	/^ETAGS = etags$/;"	m
+EXEEXT	Makefile	/^EXEEXT = $/;"	m
+GREP	Makefile	/^GREP = \/bin\/grep$/;"	m
+GRE_CHECKSUM	gre.h	29;"	d
+GRE_HEADERLEN	ipdecap.h	24;"	d
+GRE_KEY	gre.h	31;"	d
+GRE_ROUTING	gre.h	30;"	d
+GRE_SEQ	gre.h	32;"	d
+GRE_SSRCR	gre.h	33;"	d
+INSTALL	Makefile	/^INSTALL = \/usr\/bin\/install -c$/;"	m
+INSTALL_DATA	Makefile	/^INSTALL_DATA = ${INSTALL} -m 644$/;"	m
+INSTALL_HEADER	Makefile	/^INSTALL_HEADER = $(INSTALL_DATA)$/;"	m
+INSTALL_PROGRAM	Makefile	/^INSTALL_PROGRAM = ${INSTALL}$/;"	m
+INSTALL_SCRIPT	Makefile	/^INSTALL_SCRIPT = ${INSTALL}$/;"	m
+INSTALL_STRIP_PROGRAM	Makefile	/^INSTALL_STRIP_PROGRAM = $(install_sh) -c -s$/;"	m
+LDFLAGS	Makefile	/^LDFLAGS = $/;"	m
+LIBOBJS	Makefile	/^LIBOBJS = $/;"	m
+LIBS	Makefile	/^LIBS = -lcrypto -lpcap $/;"	m
+LINK	Makefile	/^LINK = $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@$/;"	m
+LTLIBOBJS	Makefile	/^LTLIBOBJS = $/;"	m
+MAKEINFO	Makefile	/^MAKEINFO = ${SHELL} \/home\/loic\/ipdecap\/missing makeinfo$/;"	m
+MALLOC	utils.h	57;"	d
+MAXIMUM_SNAPLEN	ipdecap.h	23;"	d
+MD5SUM	Makefile	/^MD5SUM = md5sum$/;"	m
+MKDIR_P	Makefile	/^MKDIR_P = \/bin\/mkdir -p$/;"	m
+MY_MAX_KEY_LENGTH	esp.h	29;"	d
+NORMAL_INSTALL	Makefile	/^NORMAL_INSTALL = :$/;"	m
+NORMAL_UNINSTALL	Makefile	/^NORMAL_UNINSTALL = :$/;"	m
+OBJEXT	Makefile	/^OBJEXT = o$/;"	m
+PACKAGE	Makefile	/^PACKAGE = ipdecap$/;"	m
+PACKAGE_BUGREPORT	Makefile	/^PACKAGE_BUGREPORT = loic-ipdecap@loicp.eu$/;"	m
+PACKAGE_NAME	Makefile	/^PACKAGE_NAME = ipdecap$/;"	m
+PACKAGE_STRING	Makefile	/^PACKAGE_STRING = ipdecap 0.7.1$/;"	m
+PACKAGE_TARNAME	Makefile	/^PACKAGE_TARNAME = ipdecap$/;"	m
+PACKAGE_URL	Makefile	/^PACKAGE_URL = $/;"	m
+PACKAGE_VERSION	Makefile	/^PACKAGE_VERSION = 0.7.1$/;"	m
+PATH_SEPARATOR	Makefile	/^PATH_SEPARATOR = :$/;"	m
+POST_INSTALL	Makefile	/^POST_INSTALL = :$/;"	m
+POST_UNINSTALL	Makefile	/^POST_UNINSTALL = :$/;"	m
+PRE_INSTALL	Makefile	/^PRE_INSTALL = :$/;"	m
+PRE_UNINSTALL	Makefile	/^PRE_UNINSTALL = :$/;"	m
+PROGRAMS	Makefile	/^PROGRAMS = $(bin_PROGRAMS)$/;"	m
+SET_MAKE	Makefile	/^SET_MAKE = $/;"	m
+SHELL	Makefile	/^SHELL = \/bin\/bash$/;"	m
+SOURCES	Makefile	/^SOURCES = $(ipdecap_SOURCES)$/;"	m
+STRIP	Makefile	/^STRIP = $/;"	m
+VERSION	Makefile	/^VERSION = 0.7.1$/;"	m
+abs_builddir	Makefile	/^abs_builddir = \/home\/loic\/ipdecap\/src$/;"	m
+abs_srcdir	Makefile	/^abs_srcdir = \/home\/loic\/ipdecap\/src$/;"	m
+abs_top_builddir	Makefile	/^abs_top_builddir = \/home\/loic\/ipdecap$/;"	m
+abs_top_srcdir	Makefile	/^abs_top_srcdir = \/home\/loic\/ipdecap$/;"	m
+ac_ct_CC	Makefile	/^ac_ct_CC = gcc$/;"	m
+add_flow	esp.c	/^int add_flow(char *ip_src, char *ip_dst, char *crypt_name, char *auth_name, char *key, char *spi) {$/;"	f
+addr_dst	esp.h	/^  address_t addr_dst;$/;"	m	struct:llflow_t
+addr_src	esp.h	/^  address_t addr_src;$/;"	m	struct:llflow_t
+address	esp.h	/^typedef union address {$/;"	u
+address_t	esp.h	/^} address_t;$/;"	t	typeref:union:address
+aes_128_cbc	esp.c	/^crypt_method_t aes_128_cbc    = { .name = "aes128-cbc", .openssl_cipher = "aes-128-cbc",  .next = &aes_192_cbc};$/;"	v
+aes_128_ctr	esp.c	/^crypt_method_t aes_128_ctr    = { .name = "aes128-ctr", .openssl_cipher = "aes-128-ctr",  .next = &aes_128_cbc};$/;"	v
+aes_192_cbc	esp.c	/^crypt_method_t aes_192_cbc    = { .name = "aes192-cbc", .openssl_cipher = "aes-192-cbc",  .next = &aes_256_cbc};$/;"	v
+aes_256_cbc	esp.c	/^crypt_method_t aes_256_cbc    = { .name = "aes256-cbc", .openssl_cipher = "aes-256-cbc",  .next = &null_enc};$/;"	v
+aes_xcbc_mac_96	esp.c	/^auth_method_t aes_xcbc_mac_96   = { .name = "aes_xcbc_mac-96", .openssl_auth = NULL, .len =  96\/8, .next = &any96 };$/;"	v
+am__DIST_COMMON	Makefile	/^am__DIST_COMMON = $(srcdir)\/Makefile.in $(top_srcdir)\/depcomp$/;"	m
+am__aclocal_m4_deps	Makefile	/^am__aclocal_m4_deps = $(top_srcdir)\/configure.ac$/;"	m
+am__can_run_installinfo	Makefile	/^am__can_run_installinfo = \\$/;"	m
+am__cd	Makefile	/^am__cd = CDPATH="$${ZSH_VERSION+.}$(PATH_SEPARATOR)" && cd$/;"	m
+am__configure_deps	Makefile	/^am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \\$/;"	m
+am__define_uniq_tagged_files	Makefile	/^am__define_uniq_tagged_files = \\$/;"	m
+am__depfiles_maybe	Makefile	/^am__depfiles_maybe = depfiles$/;"	m
+am__include	Makefile	/^am__include = include$/;"	m
+am__installdirs	Makefile	/^am__installdirs = "$(DESTDIR)$(bindir)"$/;"	m
+am__is_gnu_make	Makefile	/^am__is_gnu_make = { \\$/;"	m
+am__leading_dot	Makefile	/^am__leading_dot = .$/;"	m
+am__make_dryrun	Makefile	/^am__make_dryrun = (target_option=n; $(am__make_running_with_option))$/;"	m
+am__make_keepgoing	Makefile	/^am__make_keepgoing = (target_option=k; $(am__make_running_with_option))$/;"	m
+am__make_running_with_option	Makefile	/^am__make_running_with_option = \\$/;"	m
+am__mv	Makefile	/^am__mv = mv -f$/;"	m
+am__quote	Makefile	/^am__quote = $/;"	m
+am__tagged_files	Makefile	/^am__tagged_files = $(HEADERS) $(SOURCES) $(TAGS_FILES) $(LISP)$/;"	m
+am__tar	Makefile	/^am__tar = $${TAR-tar} chof - "$$tardir"$/;"	m
+am__uniquify_input	Makefile	/^am__uniquify_input = $(AWK) '\\$/;"	m
+am__untar	Makefile	/^am__untar = $${TAR-tar} xf -$/;"	m
+am__v_CCLD_	Makefile	/^am__v_CCLD_ = $(am__v_CCLD_$(AM_DEFAULT_VERBOSITY))$/;"	m
+am__v_CCLD_0	Makefile	/^am__v_CCLD_0 = @echo "  CCLD    " $@;$/;"	m
+am__v_CCLD_1	Makefile	/^am__v_CCLD_1 = $/;"	m
+am__v_CC_	Makefile	/^am__v_CC_ = $(am__v_CC_$(AM_DEFAULT_VERBOSITY))$/;"	m
+am__v_CC_0	Makefile	/^am__v_CC_0 = @echo "  CC      " $@;$/;"	m
+am__v_CC_1	Makefile	/^am__v_CC_1 = $/;"	m
+am__v_GEN_	Makefile	/^am__v_GEN_ = $(am__v_GEN_$(AM_DEFAULT_VERBOSITY))$/;"	m
+am__v_GEN_0	Makefile	/^am__v_GEN_0 = @echo "  GEN     " $@;$/;"	m
+am__v_GEN_1	Makefile	/^am__v_GEN_1 = $/;"	m
+am__v_P_	Makefile	/^am__v_P_ = $(am__v_P_$(AM_DEFAULT_VERBOSITY))$/;"	m
+am__v_P_0	Makefile	/^am__v_P_0 = false$/;"	m
+am__v_P_1	Makefile	/^am__v_P_1 = :$/;"	m
+am__v_at_	Makefile	/^am__v_at_ = $(am__v_at_$(AM_DEFAULT_VERBOSITY))$/;"	m
+am__v_at_0	Makefile	/^am__v_at_0 = @$/;"	m
+am__v_at_1	Makefile	/^am__v_at_1 = $/;"	m
+am_ipdecap_OBJECTS	Makefile	/^am_ipdecap_OBJECTS = ipdecap.$(OBJEXT) esp.$(OBJEXT) utils.$(OBJEXT)$/;"	m
+any128	esp.c	/^auth_method_t any128            = { .name = "any128",          .openssl_auth = NULL, .len =  96\/8, .next = &any160 };$/;"	v
+any160	esp.c	/^auth_method_t any160            = { .name = "any160",          .openssl_auth = NULL, .len = 160\/8, .next = &any192 };$/;"	v
+any192	esp.c	/^auth_method_t any192            = { .name = "any192",          .openssl_auth = NULL, .len = 192\/8, .next = &any256 };$/;"	v
+any256	esp.c	/^auth_method_t any256            = { .name = "any256",          .openssl_auth = NULL, .len = 256\/8, .next = &any384 };$/;"	v
+any384	esp.c	/^auth_method_t any384            = { .name = "any384",          .openssl_auth = NULL, .len = 384\/8, .next = &any512 };$/;"	v
+any512	esp.c	/^auth_method_t any512            = { .name = "any512",          .openssl_auth = NULL, .len = 512\/8, .next = NULL };$/;"	v
+any96	esp.c	/^auth_method_t any96             = { .name = "any96",           .openssl_auth = NULL, .len =  96\/8, .next = &any128 };$/;"	v
+args_long	ipdecap.c	/^static const struct option args_long[] = {$/;"	v	typeref:struct:option	file:
+args_str	ipdecap.c	/^static const char *args_str = "vi:o:c:f:Vl";$/;"	v	file:
+auth_method	esp.h	/^  auth_method_t *auth_method;$/;"	m	struct:llflow_t
+auth_method_list	esp.c	/^auth_method_t *auth_method_list = &null_auth;$/;"	v
+auth_method_t	esp.h	/^typedef struct auth_method_t {$/;"	s
+auth_method_t	esp.h	/^} auth_method_t;$/;"	t	typeref:struct:auth_method_t
+auth_name	esp.h	/^  char *auth_name;$/;"	m	struct:llflow_t
+bin_PROGRAMS	Makefile	/^bin_PROGRAMS = ipdecap$(EXEEXT)$/;"	m
+bindir	Makefile	/^bindir = ${exec_prefix}\/bin$/;"	m
+bpf_filter	utils.h	/^  char *bpf_filter;       \/\/ --filter option$/;"	m	struct:global_args_t
+build	Makefile	/^build = x86_64-pc-linux-gnu$/;"	m
+build_alias	Makefile	/^build_alias = $/;"	m
+build_cpu	Makefile	/^build_cpu = x86_64$/;"	m
+build_os	Makefile	/^build_os = linux-gnu$/;"	m
+build_triplet	Makefile	/^build_triplet = x86_64-pc-linux-gnu$/;"	m
+build_vendor	Makefile	/^build_vendor = pc$/;"	m
+builddir	Makefile	/^builddir = .$/;"	m
+crypt_method	esp.h	/^  crypt_method_t *crypt_method;$/;"	m	struct:llflow_t
+crypt_method_list	esp.c	/^crypt_method_t *crypt_method_list = &des_cbc;$/;"	v
+crypt_method_t	esp.h	/^typedef struct crypt_method_t {$/;"	s
+crypt_method_t	esp.h	/^} crypt_method_t;$/;"	t	typeref:struct:crypt_method_t
+crypt_name	esp.h	/^  char *crypt_name;$/;"	m	struct:llflow_t
+ctx	esp.h	/^  EVP_CIPHER_CTX *ctx;$/;"	m	struct:llflow_t
+datadir	Makefile	/^datadir = ${datarootdir}$/;"	m
+datarootdir	Makefile	/^datarootdir = ${prefix}\/share$/;"	m
+debug_print	utils.h	54;"	d
+depcomp	Makefile	/^depcomp = $(SHELL) $(top_srcdir)\/depcomp$/;"	m
+des_cbc	esp.c	/^crypt_method_t des_cbc        = { .name = "des-cbc",    .openssl_cipher = "des-cbc",      .next = &tripledes_cbc};$/;"	v
+docdir	Makefile	/^docdir = ${datarootdir}\/doc\/${PACKAGE_TARNAME}$/;"	m
+dump_flows	esp.c	/^void dump_flows() {$/;"	f
+dumpmem	utils.c	/^void dumpmem(char *prefix, const unsigned char *ptr, int size, int space) {$/;"	f
+dvidir	Makefile	/^dvidir = ${docdir}$/;"	m
+error	utils.h	64;"	d
+error	utils.h	70;"	d
+esp_config_file	utils.h	/^  char *esp_config_file;  \/\/ --config option$/;"	m	struct:global_args_t
+esp_packet_t	esp.h	/^typedef struct esp_packet_t {$/;"	s
+esp_packet_t	esp.h	/^} __attribute__ ((__packed__)) esp_packet_t;$/;"	t	typeref:struct:esp_packet_t
+exec_prefix	Makefile	/^exec_prefix = ${prefix}$/;"	m
+find_auth_method	esp.c	/^struct auth_method_t * find_auth_method(char *auth_name) {$/;"	f
+find_crypt_method	esp.c	/^struct crypt_method_t * find_crypt_method(char *crypt_name) {$/;"	f
+find_flow	esp.c	/^struct llflow_t * find_flow(char *ip_src, char *ip_dst, u_int32_t spi) {$/;"	f
+flags	gre.h	/^  u_int16_t flags;$/;"	m	struct:grehdr
+flow_head	esp.c	/^struct llflow_t *flow_head = NULL;$/;"	v	typeref:struct:llflow_t
+flows_cleanup	esp.c	/^void flows_cleanup() {$/;"	f
+global_args	ipdecap.c	/^global_args_t global_args;$/;"	v
+global_args_t	utils.h	/^typedef struct global_args_t {$/;"	s
+global_args_t	utils.h	/^} global_args_t;$/;"	t	typeref:struct:global_args_t
+grehdr	gre.h	/^struct grehdr {$/;"	s
+handle_packets	ipdecap.c	/^void handle_packets(u_char *bpf_filter, const struct pcap_pkthdr *pkthdr, const u_char *bytes) {$/;"	f
+hmac_md5_96	esp.c	/^auth_method_t hmac_md5_96       = { .name = "hmac_md5-96",     .openssl_auth = NULL, .len =  96\/8, .next = &aes_xcbc_mac_96 };$/;"	v
+hmac_sha_1_96	esp.c	/^auth_method_t hmac_sha_1_96     = { .name = "hmac_sha1-96",    .openssl_auth = NULL, .len =  96\/8, .next = &hmac_md5_96 };$/;"	v
+host	Makefile	/^host = x86_64-pc-linux-gnu$/;"	m
+host_alias	Makefile	/^host_alias = $/;"	m
+host_cpu	Makefile	/^host_cpu = x86_64$/;"	m
+host_os	Makefile	/^host_os = linux-gnu$/;"	m
+host_triplet	Makefile	/^host_triplet = x86_64-pc-linux-gnu$/;"	m
+host_vendor	Makefile	/^host_vendor = pc$/;"	m
+htmldir	Makefile	/^htmldir = ${docdir}$/;"	m
+ignore_esp	ipdecap.c	/^int ignore_esp;$/;"	v
+includedir	Makefile	/^includedir = ${prefix}\/include$/;"	m
+infodir	Makefile	/^infodir = ${datarootdir}\/info$/;"	m
+input_file	utils.h	/^  char *input_file;       \/\/ --input option$/;"	m	struct:global_args_t
+install_sh	Makefile	/^install_sh = ${SHELL} \/home\/loic\/ipdecap\/install-sh$/;"	m
+install_sh_DATA	Makefile	/^install_sh_DATA = $(install_sh) -c -m 644$/;"	m
+install_sh_PROGRAM	Makefile	/^install_sh_PROGRAM = $(install_sh) -c$/;"	m
+install_sh_SCRIPT	Makefile	/^install_sh_SCRIPT = $(install_sh) -c$/;"	m
+ipdecap_LDADD	Makefile	/^ipdecap_LDADD = $(LDADD)$/;"	m
+ipdecap_OBJECTS	Makefile	/^ipdecap_OBJECTS = $(am_ipdecap_OBJECTS)$/;"	m
+ipdecap_SOURCES	Makefile	/^ipdecap_SOURCES = ipdecap.c ipdecap.h gre.h esp.h esp.c utils.c utils.h$/;"	m
+iv	esp.h	/^  u_char iv[EVP_MAX_IV_LENGTH];$/;"	m	struct:esp_packet_t
+key	esp.h	/^  unsigned char *key;$/;"	m	struct:llflow_t
+len	esp.h	/^  int len;                \/\/ Digest bytes length$/;"	m	struct:auth_method_t
+libdir	Makefile	/^libdir = ${exec_prefix}\/lib$/;"	m
+libexecdir	Makefile	/^libexecdir = ${exec_prefix}\/libexec$/;"	m
+list_algo	utils.h	/^  bool list_algo;         \/\/ --list option$/;"	m	struct:global_args_t
+llflow_t	esp.h	/^typedef struct llflow_t {$/;"	s
+llflow_t	esp.h	/^} llflow_t;$/;"	t	typeref:struct:llflow_t
+localedir	Makefile	/^localedir = ${datarootdir}\/locale$/;"	m
+localstatedir	Makefile	/^localstatedir = ${prefix}\/var$/;"	m
+main	ipdecap.c	/^int main(int argc, char **argv) {$/;"	f
+mandir	Makefile	/^mandir = ${datarootdir}\/man$/;"	m
+member_size	utils.h	46;"	d
+mkdir_p	Makefile	/^mkdir_p = $(MKDIR_P)$/;"	m
+mkinstalldirs	Makefile	/^mkinstalldirs = $(install_sh) -d$/;"	m
+name	esp.h	/^  char *name;             \/\/ Name used in ESP configuration file$/;"	m	struct:auth_method_t
+name	esp.h	/^  char *name;             \/\/ Name used in ESP configuration file$/;"	m	struct:crypt_method_t
+next	esp.h	/^  struct auth_method_t *next;$/;"	m	struct:auth_method_t	typeref:struct:auth_method_t::auth_method_t
+next	esp.h	/^  struct crypt_method_t *next;$/;"	m	struct:crypt_method_t	typeref:struct:crypt_method_t::crypt_method_t
+next	esp.h	/^  struct llflow_t *next;$/;"	m	struct:llflow_t	typeref:struct:llflow_t::llflow_t
+next_header	esp.h	/^  u_int8_t next_header;$/;"	m	struct:esp_packet_t
+next_protocol	gre.h	/^  u_int16_t next_protocol;$/;"	m	struct:grehdr
+null_auth	esp.c	/^auth_method_t null_auth         = { .name = "null_auth",       .openssl_auth = NULL, .len =   8\/8, .next = &hmac_sha_1_96 };$/;"	v
+null_enc	esp.c	/^crypt_method_t null_enc       = { .name = "null_enc",   .openssl_cipher = NULL,           .next = NULL};$/;"	v
+oldincludedir	Makefile	/^oldincludedir = \/usr\/include$/;"	m
+openssl_auth	esp.h	/^  char *openssl_auth;     \/\/ OpenSSL internal name,  not yet used (no verification made)$/;"	m	struct:auth_method_t
+openssl_cipher	esp.h	/^  char *openssl_cipher;   \/\/ OpenSSL internal name$/;"	m	struct:crypt_method_t
+output_file	utils.h	/^  char *output_file;      \/\/ --output option$/;"	m	struct:global_args_t
+pad_len	esp.h	/^  u_int8_t pad_len;$/;"	m	struct:esp_packet_t
+parse_esp_conf	esp.c	/^int parse_esp_conf(char *filename) {$/;"	f
+parse_options	ipdecap.c	/^void parse_options(int argc, char **argv) {$/;"	f
+pcap_dumper	ipdecap.c	/^pcap_dumper_t *pcap_dumper;$/;"	v
+pcap_hdr	utils.h	/^typedef struct pcap_pkthdr pcap_hdr;$/;"	t	typeref:struct:pcap_pkthdr
+pdfdir	Makefile	/^pdfdir = ${docdir}$/;"	m
+pkgdatadir	Makefile	/^pkgdatadir = $(datadir)\/ipdecap$/;"	m
+pkgincludedir	Makefile	/^pkgincludedir = $(includedir)\/ipdecap$/;"	m
+pkglibdir	Makefile	/^pkglibdir = $(libdir)\/ipdecap$/;"	m
+pkglibexecdir	Makefile	/^pkglibexecdir = $(libexecdir)\/ipdecap$/;"	m
+prefix	Makefile	/^prefix = \/usr\/local$/;"	m
+print_algorithms	esp.c	/^void print_algorithms() {$/;"	f
+print_mac	utils.c	/^void print_mac(const unsigned char *mac_ptr) {$/;"	f
+print_version	ipdecap.c	/^void print_version() {$/;"	f
+process_esp_packet	esp.c	/^void process_esp_packet(u_char const *payload, const int payload_len, pcap_hdr *new_packet_hdr, u_char *new_packet_payload) {$/;"	f
+process_gre_packet	ipdecap.c	/^void process_gre_packet(const u_char *payload, pcap_hdr *new_packet_hdr, u_char *new_packet_payload) {$/;"	f
+process_ipip_packet	ipdecap.c	/^void process_ipip_packet(const u_char *payload, pcap_hdr *new_packet_hdr, u_char *new_packet_payload) {$/;"	f
+process_ipv6_packet	ipdecap.c	/^void process_ipv6_packet(const u_char *payload, const int payload_len, pcap_hdr *new_packet_hdr, u_char *new_packet_payload) {$/;"	f
+process_nonip_packet	ipdecap.c	/^void process_nonip_packet(const u_char *payload, const int payload_len, pcap_hdr *new_packet_hdr, u_char *new_packet_payload) {$/;"	f
+program_transform_name	Makefile	/^program_transform_name = s,x,x,$/;"	m
+psdir	Makefile	/^psdir = ${docdir}$/;"	m
+remove_ieee8021q_header	ipdecap.c	/^void remove_ieee8021q_header(const u_char *in_payload, const int in_payload_len, pcap_hdr *out_pkthdr, u_char *out_payload) {$/;"	f
+runstatedir	Makefile	/^runstatedir = ${localstatedir}\/run$/;"	m
+sa	esp.h	/^  struct sockaddr sa;$/;"	m	union:address	typeref:struct:address::sockaddr
+sa_in	esp.h	/^  struct sockaddr_in sa_in;$/;"	m	union:address	typeref:struct:address::sockaddr_in
+sa_in6	esp.h	/^  struct sockaddr_in6 sa_in6;$/;"	m	union:address	typeref:struct:address::sockaddr_in6
+sa_sto	esp.h	/^  struct sockaddr_storage sa_sto;$/;"	m	union:address	typeref:struct:address::sockaddr_storage
+sa_sto	esp.h	/^typedef struct sockaddr_storage sa_sto;$/;"	t	typeref:struct:sockaddr_storage
+sbindir	Makefile	/^sbindir = ${exec_prefix}\/sbin$/;"	m
+seq	esp.h	/^  u_int32_t seq;$/;"	m	struct:esp_packet_t
+sharedstatedir	Makefile	/^sharedstatedir = ${prefix}\/com$/;"	m
+spi	esp.h	/^  u_int32_t spi;$/;"	m	struct:esp_packet_t
+spi	esp.h	/^  u_int32_t spi;$/;"	m	struct:llflow_t
+srcdir	Makefile	/^srcdir = .$/;"	m
+str2dec	utils.c	/^void *str2dec(const char *in, int maxsize) {$/;"	f
+subdir	Makefile	/^subdir = src$/;"	m
+sysconfdir	Makefile	/^sysconfdir = ${prefix}\/etc$/;"	m
+target_alias	Makefile	/^target_alias = $/;"	m
+top_build_prefix	Makefile	/^top_build_prefix = ..\/$/;"	m
+top_builddir	Makefile	/^top_builddir = ..$/;"	m
+top_srcdir	Makefile	/^top_srcdir = ..$/;"	m
+transform	Makefile	/^transform = $(program_transform_name)$/;"	m
+tripledes_cbc	esp.c	/^crypt_method_t tripledes_cbc  = { .name = "3des-cbc",   .openssl_cipher = "des-ede3-cbc", .next = &aes_128_ctr};$/;"	v
+usage	ipdecap.c	/^void usage(void) {$/;"	f
+verbose	utils.c	/^void verbose(const char *format, ...) {$/;"	f
+verbose	utils.h	/^  bool verbose;           \/\/ --verbose option$/;"	m	struct:global_args_t
