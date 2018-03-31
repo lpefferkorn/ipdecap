@@ -593,7 +593,7 @@ void process_nonip_packet(const u_char *payload, const int payload_len, pcap_hdr
 /* Decapsulate an IPIP packet
  *
  */
-void process_ipip_packet(const u_char *payload, const int payload_len, pcap_hdr *new_packet_hdr, u_char *new_packet_payload) {
+void process_ipip_packet(const u_char *payload, pcap_hdr *new_packet_hdr, u_char *new_packet_payload) {
 
   int packet_size = 0;
   const u_char *payload_src = NULL;
@@ -965,7 +965,7 @@ void handle_packets(u_char *bpf_filter, const struct pcap_pkthdr *pkthdr, const 
 
       case IPPROTO_IPIP:
         debug_print("%s\n", "\tIPPROTO_IPIP");
-        process_ipip_packet(in_payload, in_pkthdr->caplen, out_pkthdr, out_payload);
+        process_ipip_packet(in_payload, out_pkthdr, out_payload);
         pcap_dump((u_char *)pcap_dumper, out_pkthdr, out_payload);
         break;
 
