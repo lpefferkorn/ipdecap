@@ -23,7 +23,7 @@ esac
 # Checks for libraries.
 AC_CHECK_LIB(pcap, pcap_offline_filter, [],
              AC_MSG_ERROR(pcap library not found ))
-AC_CHECK_LIB(crypto, EVP_CIPHER_CTX_init, [],
+AC_CHECK_LIB(crypto, CRYPTO_new_ex_data, [],
              AC_MSG_ERROR(OpenSSL library not found))
 
 # Checks for header files.

@@ -47,7 +47,7 @@ typedef struct auth_method_t {
 typedef struct llflow_t {
   address_t addr_src;
   address_t addr_dst;
-  EVP_CIPHER_CTX ctx;
+  EVP_CIPHER_CTX *ctx;
   unsigned char *key;
   u_int32_t spi;
   char *crypt_name;
