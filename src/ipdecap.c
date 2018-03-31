@@ -672,7 +672,7 @@ void process_ipv6_packet(const u_char *payload, const int payload_len, pcap_hdr 
  * Decapsulate a GRE packet
  *
  */
-void process_gre_packet(const u_char *payload, const int payload_len, pcap_hdr *new_packet_hdr, u_char *new_packet_payload) {
+void process_gre_packet(const u_char *payload, pcap_hdr *new_packet_hdr, u_char *new_packet_payload) {
 
   //TODO: check si version == 0 1 non supporté car pptp)
   int packet_size = 0;
@@ -977,7 +977,7 @@ void handle_packets(u_char *bpf_filter, const struct pcap_pkthdr *pkthdr, const 
 
       case IPPROTO_GRE:
         debug_print("%s\n", "\tIPPROTO_GRE\n");
-        process_gre_packet(in_payload, in_pkthdr->caplen, out_pkthdr, out_payload);
+        process_gre_packet(in_payload, out_pkthdr, out_payload);
         pcap_dump((u_char *)pcap_dumper, out_pkthdr, out_payload);
         break;
 
