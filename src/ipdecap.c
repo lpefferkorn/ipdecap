@@ -198,13 +198,15 @@ void process_nonip_packet(const u_char *in_payload, const int in_payload_len, pc
  *  @param in_payload input packet payload
  *  @param out_pkthdr new packet header
  *  @param out_payload new packet payload
+ *  @return 0 on success, -1 on error
  */
-void process_ipip_packet(const u_char *in_payload, pcap_hdr *out_pkthdr, u_char *out_payload) {
+int process_ipip_packet(const u_char *in_payload, pcap_hdr *out_pkthdr, u_char *out_payload) {
 
   int packet_size = 0;
   const u_char *payload_src = NULL;
   u_char *payload_dst = NULL;
   const struct ip *ip_hdr = NULL;
+  int ip_hl = 0;
 
   payload_src = in_payload;
   payload_dst = out_payload;
@@ -215,14 +217,21 @@ void process_ipip_packet(const u_char *in_payload, pcap_hdr *out_pkthdr, u_char 
   payload_dst += sizeof(struct ether_header);
   packet_size = sizeof(struct ether_header);
 
-  /* Read encapsulating IP header to find offset to encapsulted IP packet */
+  /* Read encapsulating IP header to find offset to encapsulated IP packet */
   ip_hdr = (const struct ip *) payload_src;
 
   debug_print("\tIPIP: outer IP - hlen:%i iplen:%02i protocol:%02x\n",
       (ip_hdr->ip_hl *4), ntohs(ip_hdr->ip_len), ip_hdr->ip_p);
 
+  /* Check for possible corrupted IP header as in https://tools.ietf.org/html/rfc791 */
+  ip_hl = ip_hdr->ip_hl;
+  if (ip_hl < 5) {
+    debug_print("Invalid IP header length in IPIP header: got %d expected > 5\n", ip_hl);
+    return -1;
+  }
+
   /* Shift to encapsulated IP header, read total length */
-  payload_src += ip_hdr->ip_hl *4;
+  payload_src += ip_hl *4;
   ip_hdr = (const struct ip *) payload_src;
 
   debug_print("\tIPIP: inner IP - hlen:%i iplen:%02i protocol:%02x\n",
@@ -232,6 +241,7 @@ void process_ipip_packet(const u_char *in_payload, pcap_hdr *out_pkthdr, u_char 
   packet_size += ntohs(ip_hdr->ip_len);
 
   out_pkthdr->len = packet_size;
+  return 0;
 }
 
 /** @brief Decapsulate an IPv6 packet encapsulated into an IPv4 packet
@@ -425,7 +435,12 @@ void handle_packets(u_char *bpf_filter, const struct pcap_pkthdr *pkthdr, const 
 
       case IPPROTO_IPIP:
         debug_print("%s\n", "\tIPPROTO_IPIP");
-        process_ipip_packet(in_payload, out_pkthdr, out_payload);
+        if (process_ipip_packet(in_payload, out_pkthdr, out_payload) != 0){
+          verbose("Invalid IPIP packet header (corrupted file?), skipping packet\n");
+          free(out_pkthdr);
+          free(out_payload);
+          return;
+	}
         pcap_dump((u_char *)pcap_dumper, out_pkthdr, out_payload);
         break;
 
@@ -456,7 +471,7 @@ void handle_packets(u_char *bpf_filter, const struct pcap_pkthdr *pkthdr, const 
         break;
 
       default:
-        /* Copy not encapsulated/unknown encpsulation protocol packets, like non_ip packets */
+        /* Copy not encapsulated/unknown encapsulation protocol packets, like non_ip packets */
         process_nonip_packet(in_payload, in_pkthdr->caplen, out_pkthdr, out_payload);
         pcap_dump((u_char *)pcap_dumper, out_pkthdr, out_payload);
         verbose("Copying packet %i: not encapsulated/unknown encapsulation protocol\n", packet_num);

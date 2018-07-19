@@ -5,8 +5,10 @@ clean:
 	-rm -vf *.cap.output
 
 process_pcap:
-	@echo "*** Processing gre_version0.cap..."
+	@echo "*** Processing icmp_ipip_tunnel.cap..."
 	../../src/ipdecap -i icmp_ipip_tunnel.cap -o icmp_ipip_tunnel.cap.output
+	@echo "*** Processing ipip_corrupted_header_length.pcapng..."
+	../../src/ipdecap -i ipip_corrupted_header_length.pcapng -o ipip_corrupted_header_length.pcapng.output
 
 compare_md5:
 	@echo "*** Comparing checksums..."
