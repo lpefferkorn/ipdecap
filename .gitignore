@@ -5,6 +5,7 @@ callgrind.out.*
 src/ipdecap
 ipdecap-*.tar.gz
 .gitconfig
+.DS_Store
 
 # http://www.gnu.org/software/automake
 

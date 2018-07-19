@@ -146,11 +146,13 @@ void parse_options(int argc, char **argv) {
  *  @param in_payload_len len of input packet payload
  *  @param out_pkthdr new packet header
  *  @param out_payload new packet payload
+ *  @return 0 on success, -1 on error
  */
-void remove_ieee8021q_header(const u_char *in_payload, const int in_payload_len, pcap_hdr *out_pkthdr, u_char *out_payload) {
+int remove_ieee8021q_header(const u_char *in_payload, const int in_payload_len, pcap_hdr *out_pkthdr, u_char *out_payload) {
 
   u_char *payload_dst = NULL;
   u_char *payload_src = NULL;
+  int how_much_to_copy = 0;
 
   /* Pointer used to shift through source packet bytes */
   payload_src = (u_char *) in_payload;
@@ -163,13 +165,20 @@ void remove_ieee8021q_header(const u_char *in_payload, const int in_payload_len,
 
   /* Skip ieee 802.1q bytes */
   payload_src += VLAN_TAG_LEN;
-  memcpy(payload_dst, payload_src, in_payload_len
-                                  - 2*sizeof(struct ether_addr)
-                                  - VLAN_TAG_LEN);
+
+  /* Check for invalid payload_len (malformed file) */
+  how_much_to_copy = in_payload_len - 2*sizeof(struct ether_addr) - VLAN_TAG_LEN;
+  if (how_much_to_copy < 1) {
+    debug_print("Invalid payload_len for ieee8021q header:(%d) expected >1\n", how_much_to_copy);
+    return -1;
+  }
+  memcpy(payload_dst, payload_src, how_much_to_copy);
 
   /* TODO: Should I check for minimum frame size, even if most drivers don't supply FCS (4 bytes) ? */
   out_pkthdr->len = in_payload_len - VLAN_TAG_LEN;
   out_pkthdr->caplen = in_payload_len - VLAN_TAG_LEN;
+
+  return 0;
 }
 
 /** @brief Simple copy of non-IP packet
@@ -381,7 +390,12 @@ void handle_packets(u_char *bpf_filter, const struct pcap_pkthdr *pkthdr, const 
   /* If IEEE 802.1Q header, remove it before further processing */
   if (ntohs(eth_hdr->ether_type) == ETHERTYPE_VLAN) {
       debug_print("%s\n", "\tIEEE 801.1Q header\n");
-      remove_ieee8021q_header(in_payload, in_pkthdr->caplen, out_pkthdr, out_payload);
+      if (remove_ieee8021q_header(in_payload, in_pkthdr->caplen, out_pkthdr, out_payload) != 0) {
+        verbose("Invalid 802.1q payload length (corrupted file?), skipping packet\n");
+        free(out_pkthdr);
+        free(out_payload);
+        return;
+      }
 
       /* Update source packet with the new one without 802.1q header */
       memcpy(in_payload, out_payload, out_pkthdr->caplen);
