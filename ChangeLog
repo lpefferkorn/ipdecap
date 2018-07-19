@@ -1,6 +1,13 @@
+v0.7.2 - 2018/07/19: Loic Pefferkorn <loic-ipdecap@loicp.eu>
+  * Fix segfault on malformed 802.1q header (author: aapo, issue #4)
+  * Fix segfault on malformed IPIP header (issue #5)
+  * Support for OpenSSL >= 1.1.0 (author: jumrc)
+  * Global code cleanup: Doxygen comments, source code split
+
 v0.7.1 - 2016/04/21: Loic Pefferkorn <loic-ipdecap@loicp.eu>
   * Autotools update to ensure OS X compatibility (10.9 with MacPorts)
   * Warnings cleanup
+
 v0.7 - 2014/03/04: Loic Pefferkorn <loic-ipdecap@loicp.eu>
   * Ported to FreeBSD
   * Better error messages

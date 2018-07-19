@@ -1,6 +1,12 @@
 Hisu Kang: 
--Suggestion for IEEE 802.1Q support
--Preliminary patch for 6in4 support (patch adapted)
+  - Suggestion for IEEE 802.1Q support
+  - Preliminary patch for 6in4 support (patch adapted)
 
 William Stearns:
--Tests for OS X compatibility (10.9 with MacPorts project)
+  - Tests for OS X compatibility (10.9 with MacPorts project)
+
+Aapo Rantalainen:
+  - Segfault fix on malformed 802.1q header
+
+jurmc:
+  - Support for OpenSSL >= 1.1.0
