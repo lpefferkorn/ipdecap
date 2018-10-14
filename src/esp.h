@@ -19,6 +19,8 @@
 */
 
 #include <stdint.h>
+#include <sys/socket.h>    // for struct sockaddr
+#include <netinet/in.h>    // for struct sockaddr_in
 #include <openssl/evp.h>
 #include "utils.h"
 #pragma once
